@@ -105,8 +105,8 @@ function OrderTracker() {
     onError: (err) => setMessage(err instanceof Error ? err.message : "Could not cancel order"),
   });
 
-  const data = order.data;
   const activeIndex = data ? Math.max(0, steps.findIndex((s) => s.key === data.status)) : 0;
+
   const qrText =
     typeof qr.data === "string"
       ? qr.data
