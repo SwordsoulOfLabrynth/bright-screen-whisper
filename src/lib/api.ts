@@ -55,6 +55,7 @@ export type TransactionResponseDto = {
   screenshotUrl: string | null;
   aiVerificationNotes?: string | null;
   createdAt?: string | null;
+  updatedAt?: string | null;
   qrToken?: string | null;
 };
 
