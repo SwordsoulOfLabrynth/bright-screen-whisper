@@ -4,7 +4,8 @@ import { Package } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { api, formatMoney, statusLabel } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
-import { getOrders, mergeOrders } from "@/lib/local-store";
+import { refreshBuyerOrders } from "@/lib/buyer-orders";
+import { getOrders } from "@/lib/local-store";
 
 
 export const Route = createFileRoute("/orders/")({
@@ -32,12 +33,7 @@ function OrdersScreen() {
     queryKey: ["orders", user?.id ?? 0],
     queryFn: async () => {
       if (!user) return getOrders();
-      try {
-        const live = await api.buyerTransactions(user.id);
-        return mergeOrders(Array.isArray(live) ? live : []);
-      } catch {
-        return getOrders();
-      }
+      return refreshBuyerOrders(user.id);
     },
     refetchInterval: 15000,
   });

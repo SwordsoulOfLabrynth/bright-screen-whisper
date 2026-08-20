@@ -13,7 +13,8 @@ import {
 } from "@/lib/api";
 
 import { useAuth } from "@/lib/auth";
-import { getOrder, mergeOrders, saveOrder } from "@/lib/local-store";
+import { refreshBuyerOrders } from "@/lib/buyer-orders";
+import { getOrder, saveOrder } from "@/lib/local-store";
 
 import { cn } from "@/lib/utils";
 
@@ -65,14 +66,7 @@ function OrderTracker() {
   const order = useQuery({
     queryKey: ["order", orderId, user?.id ?? 0],
     queryFn: async () => {
-      if (user) {
-        try {
-          const live = await api.buyerTransactions(user.id);
-          if (Array.isArray(live)) mergeOrders(live);
-        } catch {
-          /* fall back to cache */
-        }
-      }
+      if (user) await refreshBuyerOrders(user.id);
       return getOrder(orderId);
     },
     refetchInterval: 15000,
