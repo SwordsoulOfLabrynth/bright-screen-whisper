@@ -75,12 +75,7 @@ function OrderTracker() {
   const data: TransactionResponseDto | null | undefined = order.data;
 
 
-  const qr = useQuery({
-    queryKey: ["order-qr", orderId],
-    queryFn: () => api.transactionQr(orderId),
-    enabled: data?.status === "ESCROW_LOCKED",
-    retry: false,
-  });
+  // The QR endpoint is seller-scoped; buyers scan the seller's code instead.
 
 
   const release = useMutation({
