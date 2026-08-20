@@ -12,7 +12,9 @@ import {
   type TransactionStatus,
 } from "@/lib/api";
 
-import { getOrder, saveOrder } from "@/lib/local-store";
+import { useAuth } from "@/lib/auth";
+import { getOrder, mergeOrders, saveOrder } from "@/lib/local-store";
+
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/orders/$id")({
