@@ -95,7 +95,7 @@ function OrderTracker() {
       saveOrder(updated);
       setMessage("Funds released. Thanks for confirming the handover.");
       void queryClient.invalidateQueries({ queryKey: ["order", orderId] });
-      void queryClient.invalidateQueries({ queryKey: ["local-orders"] });
+      void queryClient.invalidateQueries({ queryKey: ["orders"] });
     },
     onError: (err) => setMessage(err instanceof Error ? err.message : "Could not release funds"),
   });
@@ -107,7 +107,7 @@ function OrderTracker() {
       saveOrder(updated);
       setMessage("Order cancelled. Refund is on its way.");
       void queryClient.invalidateQueries({ queryKey: ["order", orderId] });
-      void queryClient.invalidateQueries({ queryKey: ["local-orders"] });
+      void queryClient.invalidateQueries({ queryKey: ["orders"] });
     },
     onError: (err) => setMessage(err instanceof Error ? err.message : "Could not cancel order"),
   });
