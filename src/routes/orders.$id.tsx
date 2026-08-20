@@ -164,10 +164,12 @@ function OrderTracker() {
               <p className="mt-1 text-xs leading-snug text-muted-foreground">
                 Show this to the seller, or paste the token they scan to release funds.
               </p>
-              {qrText && (
-                <p className="mt-3 rounded-xl bg-accent px-3 py-2 text-[11px] break-all text-accent-foreground">
-                  {qrText}
-                </p>
+              {qrImage && (
+                <img
+                  src={qrImage}
+                  alt={`Handover QR code for order ${data.id}`}
+                  className="mx-auto mt-3 size-44 rounded-xl bg-background p-2"
+                />
               )}
               <input
                 value={qrToken}
