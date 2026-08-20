@@ -12,7 +12,9 @@ import {
   type TransactionStatus,
 } from "@/lib/api";
 
-import { getOrder, saveOrder } from "@/lib/local-store";
+import { useAuth } from "@/lib/auth";
+import { getOrder, mergeOrders, saveOrder } from "@/lib/local-store";
+
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/orders/$id")({
@@ -59,12 +61,25 @@ function OrderTracker() {
   const [qrToken, setQrToken] = useState("");
   const [message, setMessage] = useState<string | null>(null);
 
+  const { user } = useAuth();
   const order = useQuery({
-    queryKey: ["order", orderId],
-    queryFn: async () => getOrder(orderId),
+    queryKey: ["order", orderId, user?.id ?? 0],
+    queryFn: async () => {
+      if (user) {
+        try {
+          const live = await api.buyerTransactions(user.id);
+          if (Array.isArray(live)) mergeOrders(live);
+        } catch {
+          /* fall back to cache */
+        }
+      }
+      return getOrder(orderId);
+    },
+    refetchInterval: 15000,
   });
 
   const data: TransactionResponseDto | null | undefined = order.data;
+
 
   const qr = useQuery({
     queryKey: ["order-qr", orderId],
@@ -80,7 +95,7 @@ function OrderTracker() {
       saveOrder(updated);
       setMessage("Funds released. Thanks for confirming the handover.");
       void queryClient.invalidateQueries({ queryKey: ["order", orderId] });
-      void queryClient.invalidateQueries({ queryKey: ["local-orders"] });
+      void queryClient.invalidateQueries({ queryKey: ["orders"] });
     },
     onError: (err) => setMessage(err instanceof Error ? err.message : "Could not release funds"),
   });
@@ -92,7 +107,7 @@ function OrderTracker() {
       saveOrder(updated);
       setMessage("Order cancelled. Refund is on its way.");
       void queryClient.invalidateQueries({ queryKey: ["order", orderId] });
-      void queryClient.invalidateQueries({ queryKey: ["local-orders"] });
+      void queryClient.invalidateQueries({ queryKey: ["orders"] });
     },
     onError: (err) => setMessage(err instanceof Error ? err.message : "Could not cancel order"),
   });

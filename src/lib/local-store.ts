@@ -37,6 +37,17 @@ export function saveOrder(order: TransactionResponseDto) {
   write(ORDER_KEY, [order, ...orders]);
 }
 
+export function mergeOrders(incoming: TransactionResponseDto[]) {
+  const existing = read<TransactionResponseDto[]>(ORDER_KEY, []);
+  const map = new Map<number, TransactionResponseDto>();
+  for (const o of existing) map.set(o.id, o);
+  for (const o of incoming) map.set(o.id, { ...map.get(o.id), ...o });
+  const merged = [...map.values()].sort((a, b) => b.id - a.id);
+  write(ORDER_KEY, merged);
+  return merged;
+}
+
+
 export function getOrders(): TransactionResponseDto[] {
   return read<TransactionResponseDto[]>(ORDER_KEY, []);
 }

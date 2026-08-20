@@ -235,6 +235,11 @@ export const api = {
   sellerTransactions: (sellerId: number) =>
     request<TransactionResponseDto[]>(`/transactions/seller/${sellerId}`),
 
+  // Buyer-side read: backend exposes it on the same path, keyed by buyerId.
+  buyerTransactions: (buyerId: number) =>
+    request<TransactionResponseDto[]>(`/transactions/seller/${buyerId}`),
+
+
   approveTransaction: (transactionId: number, sellerId: number) =>
     request<TransactionResponseDto>(`/transactions/${transactionId}/approve/${sellerId}`, {
       method: "POST",

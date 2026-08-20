@@ -2,8 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Package } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { formatMoney, statusLabel } from "@/lib/api";
-import { getOrders } from "@/lib/local-store";
+import { api, formatMoney, statusLabel } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
+import { getOrders, mergeOrders } from "@/lib/local-store";
+
 
 export const Route = createFileRoute("/orders/")({
   head: () => ({
@@ -25,7 +27,21 @@ export const Route = createFileRoute("/orders/")({
 });
 
 function OrdersScreen() {
-  const orders = useQuery({ queryKey: ["local-orders"], queryFn: async () => getOrders() });
+  const { user } = useAuth();
+  const orders = useQuery({
+    queryKey: ["orders", user?.id ?? 0],
+    queryFn: async () => {
+      if (!user) return getOrders();
+      try {
+        const live = await api.buyerTransactions(user.id);
+        return mergeOrders(Array.isArray(live) ? live : []);
+      } catch {
+        return getOrders();
+      }
+    },
+    refetchInterval: 15000,
+  });
+
 
   return (
     <AppShell requireRole="CUSTOMER">
