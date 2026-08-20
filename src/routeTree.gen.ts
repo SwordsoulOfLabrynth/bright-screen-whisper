@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as SellerRouteImport } from './routes/seller'
 import { Route as TrustguardRouteImport } from './routes/trustguard'
 import { Route as ListingSlugRouteImport } from './routes/listing.$slug'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SellerRoute = SellerRouteImport.update({
@@ -44,6 +50,7 @@ const ListingSlugRoute = ListingSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/pricing': typeof PricingRoute
+  '/search': typeof SearchRoute
   '/seller': typeof SellerRoute
   '/trustguard': typeof TrustguardRoute
   '/listing/$slug': typeof ListingSlugRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/pricing': typeof PricingRoute
+  '/search': typeof SearchRoute
   '/seller': typeof SellerRoute
   '/trustguard': typeof TrustguardRoute
   '/listing/$slug': typeof ListingSlugRoute
@@ -59,22 +67,32 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/pricing': typeof PricingRoute
+  '/search': typeof SearchRoute
   '/seller': typeof SellerRoute
   '/trustguard': typeof TrustguardRoute
   '/listing/$slug': typeof ListingSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/pricing' | '/seller' | '/trustguard' | '/listing/$slug'
+  fullPaths:
+    '/' | '/pricing' | '/search' | '/seller' | '/trustguard' | '/listing/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/pricing' | '/seller' | '/trustguard' | '/listing/$slug'
+  to:
+    '/' | '/pricing' | '/search' | '/seller' | '/trustguard' | '/listing/$slug'
   id:
-    '__root__' | '/' | '/pricing' | '/seller' | '/trustguard' | '/listing/$slug'
+    | '__root__'
+    | '/'
+    | '/pricing'
+    | '/search'
+    | '/seller'
+    | '/trustguard'
+    | '/listing/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PricingRoute: typeof PricingRoute
+  SearchRoute: typeof SearchRoute
   SellerRoute: typeof SellerRoute
   TrustguardRoute: typeof TrustguardRoute
   ListingSlugRoute: typeof ListingSlugRoute
@@ -94,6 +112,13 @@ declare module '@tanstack/react-router' {
       path: '/pricing'
       fullPath: '/pricing'
       preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/seller': {
@@ -123,6 +148,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PricingRoute: PricingRoute,
+  SearchRoute: SearchRoute,
   SellerRoute: SellerRoute,
   TrustguardRoute: TrustguardRoute,
   ListingSlugRoute: ListingSlugRoute,
