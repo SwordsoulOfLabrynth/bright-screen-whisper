@@ -1,7 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Search, ShieldCheck, Store, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
+import { ChatWidget } from "@/components/ChatWidget";
 import { cn } from "@/lib/utils";
+
 
 const tabs = [
   { to: "/", label: "Search", icon: Search },
