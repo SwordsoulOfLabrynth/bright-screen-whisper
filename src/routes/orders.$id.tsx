@@ -1,9 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, QrCode } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppShell } from "@/components/AppShell";
-import { api, formatMoney, statusLabel, type TransactionStatus } from "@/lib/api";
+import {
+  api,
+  formatMoney,
+  normaliseStatus,
+  statusLabel,
+  type TransactionResponseDto,
+  type TransactionStatus,
+} from "@/lib/api";
+
 import { getOrder, saveOrder } from "@/lib/local-store";
 import { cn } from "@/lib/utils";
 
