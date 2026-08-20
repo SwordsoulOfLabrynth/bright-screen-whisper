@@ -49,17 +49,18 @@ function SellerQr() {
       </p>
 
       <div className="mt-5 rounded-3xl border border-border bg-card p-5 text-center">
-        <QrCode className="mx-auto size-24 text-foreground" />
-        {qr.isPending && <p className="mt-3 text-xs text-muted-foreground">Loading token…</p>}
-        {qr.isError && (
-          <p className="mt-3 text-xs text-destructive">
-            {(qr.error as Error).message}
-          </p>
+        {qrImage ? (
+          <img
+            src={qrImage}
+            alt={`Handover QR code for order ${orderId}`}
+            className="mx-auto size-52 rounded-xl bg-background p-2"
+          />
+        ) : (
+          <QrCode className="mx-auto size-24 text-muted-foreground" />
         )}
-        {token && (
-          <p className="mt-3 rounded-xl bg-accent px-3 py-2 text-[11px] break-all text-accent-foreground">
-            {token}
-          </p>
+        {qr.isPending && <p className="mt-3 text-xs text-muted-foreground">Loading QR…</p>}
+        {qr.isError && (
+          <p className="mt-3 text-xs text-destructive">{(qr.error as Error).message}</p>
         )}
         {order && (
           <>
