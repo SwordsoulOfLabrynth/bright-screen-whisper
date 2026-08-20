@@ -1,9 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, QrCode } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppShell } from "@/components/AppShell";
-import { api, formatMoney, statusLabel, type TransactionStatus } from "@/lib/api";
+import {
+  api,
+  formatMoney,
+  normaliseStatus,
+  statusLabel,
+  type TransactionResponseDto,
+  type TransactionStatus,
+} from "@/lib/api";
+
 import { getOrder, saveOrder } from "@/lib/local-store";
 import { cn } from "@/lib/utils";
 
@@ -56,12 +64,31 @@ function OrderTracker() {
     queryFn: async () => getOrder(orderId),
   });
 
+  // Live status straight from the backend, polled while the order is active.
+  const live = useQuery({
+    queryKey: ["order-status", orderId],
+    queryFn: async () => normaliseStatus(await api.transactionStatus(orderId)),
+    enabled: Number.isFinite(orderId),
+    refetchInterval: 15000,
+    retry: false,
+  });
+
+  const cached = order.data;
+  const data: TransactionResponseDto | null | undefined =
+    cached && live.data && live.data !== cached.status ? { ...cached, status: live.data } : cached;
+
+
+  useEffect(() => {
+    if (data && cached && data.status !== cached.status) saveOrder(data);
+  }, [data, cached]);
+
   const qr = useQuery({
     queryKey: ["order-qr", orderId],
     queryFn: () => api.transactionQr(orderId),
-    enabled: order.data?.status === "ESCROW_LOCKED",
+    enabled: data?.status === "ESCROW_LOCKED",
     retry: false,
   });
+
 
   const release = useMutation({
     mutationFn: () => api.releaseTransaction({ transactionId: orderId, qrToken }),
@@ -86,8 +113,8 @@ function OrderTracker() {
     onError: (err) => setMessage(err instanceof Error ? err.message : "Could not cancel order"),
   });
 
-  const data = order.data;
   const activeIndex = data ? Math.max(0, steps.findIndex((s) => s.key === data.status)) : 0;
+
   const qrText =
     typeof qr.data === "string"
       ? qr.data

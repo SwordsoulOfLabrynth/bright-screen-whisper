@@ -239,8 +239,14 @@ export const api = {
       method: "POST",
     }),
 
+  transactionStatus: (transactionId: number) =>
+    request<TransactionResponseDto | TransactionStatus | { status: TransactionStatus }>(
+      `/transactions/${transactionId}/status`,
+    ),
+
   transactionQr: (transactionId: number) =>
     request<unknown>(`/transactions/${transactionId}/qr`),
+
 
   releaseTransaction: (input: { transactionId: number; qrToken: string }) =>
     request<TransactionResponseDto>("/transactions/release", { method: "POST", body: input }),
@@ -255,6 +261,21 @@ export const statusLabel: Record<TransactionStatus, string> = {
   COMPLETED: "Completed",
   CANCELLED_AND_REFUNDED: "Cancelled & refunded",
 };
+
+// The status endpoint may answer with a bare enum string, { status }, or a full
+// transaction — normalise all three into a TransactionStatus.
+export function normaliseStatus(payload: unknown): TransactionStatus | null {
+  const value =
+    typeof payload === "string"
+      ? payload
+      : payload && typeof payload === "object" && "status" in payload
+        ? (payload as { status?: unknown }).status
+        : null;
+  if (typeof value !== "string") return null;
+  const upper = value.toUpperCase().replace(/[\s-]/g, "_");
+  return upper in statusLabel ? (upper as TransactionStatus) : null;
+}
+
 
 export function formatMoney(amount: number | null | undefined) {
   if (amount == null) return "$0";
