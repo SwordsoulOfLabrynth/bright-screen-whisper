@@ -1,106 +1,113 @@
+import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Bot, Search, Sparkles } from "lucide-react";
+import { Search, Sparkles } from "lucide-react";
+import { useState, type FormEvent } from "react";
 import { AppShell } from "@/components/AppShell";
 import { ListingCard } from "@/components/ListingCard";
-import { listings, suggestions } from "@/lib/matchguard-data";
+import { api, type ProductRecommendationDto } from "@/lib/api";
+import { cacheProducts } from "@/lib/local-store";
 
 export const Route = createFileRoute("/search")({
   head: () => ({
     meta: [
-      { title: "AI search — Match Facebook & TikTok listings | MatchGuard" },
+      { title: "AI search — MatchGuard" },
       {
         name: "description",
         content:
-          "Describe what you need in plain words and MatchGuard's AI search matches live Facebook and TikTok shop posts against your requirements.",
+          "Describe what you need in plain words and MatchGuard's Guardian AI ranks verified social listings by fit and trust score.",
       },
       { property: "og:title", content: "AI search — MatchGuard" },
       {
         property: "og:description",
-        content: "Plain-language search across social shop posts, with escrow-protected checkout.",
+        content: "Natural-language search across verified social marketplace posts.",
       },
     ],
   }),
-  component: SearchPage,
+  component: SearchScreen,
 });
 
-function SearchPage() {
-  const [query, setQuery] = useState("");
-  const [searched, setSearched] = useState(false);
+const chips = [
+  "1440p gaming PC under $1,300",
+  "Light laptop for design school",
+  "Camera for indoor interviews",
+];
 
-  const results = searched ? listings : listings.slice(0, 2);
+function SearchScreen() {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<ProductRecommendationDto[] | null>(null);
+
+  const search = useMutation({
+    mutationFn: (q: string) => api.searchProducts(q),
+    onSuccess: (data) => {
+      cacheProducts(data);
+      setResults(data);
+    },
+  });
+
+  function run(event: FormEvent) {
+    event.preventDefault();
+    if (query.trim()) search.mutate(query.trim());
+  }
 
   return (
-    <AppShell>
-      <h1 className="text-xl font-bold tracking-tight">AI search</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Say it like you'd say it to a friend — budget, must-haves, deal breakers.
+    <AppShell requireRole="CUSTOMER">
+      <h1 className="text-[27px] font-bold tracking-tight">What are you looking for?</h1>
+      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+        Guardian reads every social post and scores how well it fits your ask.
       </p>
 
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setSearched(true);
-        }}
-        className="shadow-card mt-4 flex items-center gap-2 rounded-2xl bg-card p-2 pl-4"
+        onSubmit={run}
+        className="mt-5 flex items-center gap-2 rounded-2xl border border-border bg-card p-1.5 pl-3.5 shadow-card"
       >
-        <Search className="size-4 shrink-0 text-muted-foreground" />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="e.g. quiet 1440p gaming PC under $1,300"
-          className="min-w-0 flex-1 bg-transparent py-2 text-sm outline-none placeholder:text-muted-foreground"
+          placeholder="Gaming PC under $1,300 with upgrade room"
+          className="min-w-0 flex-1 bg-transparent text-[13px] outline-none"
         />
         <button
           type="submit"
-          className="bg-escrow rounded-xl px-4 py-2 text-sm font-semibold text-primary-foreground"
+          className="grid size-9.5 place-items-center rounded-xl bg-brand-teal text-primary-foreground"
+          aria-label="Search"
         >
-          Match
+          <Search className="size-4" />
         </button>
       </form>
 
-      <div className="mt-3 flex items-start gap-3 rounded-2xl border border-border bg-card p-3">
-        <span className="bg-escrow flex size-9 shrink-0 items-center justify-center rounded-full text-primary-foreground">
-          <Bot className="size-5" />
-        </span>
-        <div>
-          <p className="text-sm font-semibold">
-            Guardian here — search with AI, not keywords
-            <Sparkles className="ml-1 inline size-3.5 text-primary" />
-          </p>
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            Tap a starter below and I'll rank real social posts by how well they fit you.
-          </p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {suggestions.map((s) => (
-              <button
-                key={s}
-                onClick={() => {
-                  setQuery(s);
-                  setSearched(true);
-                }}
-                className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </div>
+      <div className="flex flex-wrap gap-2">
+        {chips.map((chip) => (
+          <button
+            key={chip}
+            type="button"
+            onClick={() => {
+              setQuery(chip);
+              search.mutate(chip);
+            }}
+            className="rounded-full border border-border bg-card px-2.5 py-1.5 text-[11px] font-semibold text-secondary-foreground"
+          >
+            {chip}
+          </button>
+        ))}
       </div>
 
-      {searched ? (
-        <div className="mt-6 flex items-center justify-between">
-          <h2 className="font-semibold">{listings.length} matches found</h2>
-          <span className="text-xs text-muted-foreground">1 AI token used</span>
-        </div>
-      ) : (
-        <h2 className="mt-6 font-semibold">Trending #TrustGuard listings</h2>
-      )}
-
-      <div className="mt-3 space-y-3">
-        {results.map((listing) => (
-          <ListingCard key={listing.slug} listing={listing} />
-        ))}
+      <div className="mt-6 space-y-2.5">
+        {search.isPending && (
+          <div className="flex items-center gap-2 rounded-2xl bg-accent px-4 py-3 text-xs font-semibold text-accent-foreground">
+            <Sparkles className="size-4 animate-pulse" /> Guardian is ranking listings…
+          </div>
+        )}
+        {search.isError && (
+          <p className="rounded-2xl bg-destructive/10 px-4 py-3 text-xs text-destructive">
+            {(search.error as Error).message}
+          </p>
+        )}
+        {results?.length === 0 && (
+          <p className="rounded-2xl border border-border bg-card px-4 py-8 text-center text-xs text-muted-foreground">
+            No matching posts yet. Try describing your budget and use case.
+          </p>
+        )}
+        {results?.map((product) => <ListingCard key={product.productId} product={product} />)}
       </div>
     </AppShell>
   );
