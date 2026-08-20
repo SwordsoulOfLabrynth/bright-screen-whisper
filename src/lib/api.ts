@@ -239,8 +239,14 @@ export const api = {
       method: "POST",
     }),
 
+  transactionStatus: (transactionId: number) =>
+    request<TransactionResponseDto | TransactionStatus | { status: TransactionStatus }>(
+      `/transactions/${transactionId}/status`,
+    ),
+
   transactionQr: (transactionId: number) =>
     request<unknown>(`/transactions/${transactionId}/qr`),
+
 
   releaseTransaction: (input: { transactionId: number; qrToken: string }) =>
     request<TransactionResponseDto>("/transactions/release", { method: "POST", body: input }),
