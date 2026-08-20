@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, QrCode } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import {
   api,
   formatMoney,
-  normaliseStatus,
+
   statusLabel,
   type TransactionResponseDto,
   type TransactionStatus,
@@ -64,23 +64,7 @@ function OrderTracker() {
     queryFn: async () => getOrder(orderId),
   });
 
-  // Live status straight from the backend, polled while the order is active.
-  const live = useQuery({
-    queryKey: ["order-status", orderId],
-    queryFn: async () => normaliseStatus(await api.transactionStatus(orderId)),
-    enabled: Number.isFinite(orderId),
-    refetchInterval: 15000,
-    retry: false,
-  });
-
-  const cached = order.data;
-  const data: TransactionResponseDto | null | undefined =
-    cached && live.data && live.data !== cached.status ? { ...cached, status: live.data } : cached;
-
-
-  useEffect(() => {
-    if (data && cached && data.status !== cached.status) saveOrder(data);
-  }, [data, cached]);
+  const data: TransactionResponseDto | null | undefined = order.data;
 
   const qr = useQuery({
     queryKey: ["order-qr", orderId],
