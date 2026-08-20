@@ -33,6 +33,9 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <main className="mx-auto max-w-2xl px-4 py-4">{children}</main>
 
+      <ChatWidget />
+
+
       <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-border/70 bg-background/95 backdrop-blur">
         <div className="mx-auto flex max-w-2xl items-stretch gap-1 px-4 py-2">
           {tabs.map(({ to, label, icon: Icon }) => {
