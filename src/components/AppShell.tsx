@@ -1,12 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Search, ShieldCheck, Store, Sparkles } from "lucide-react";
+import { Home, Search, ShieldCheck, Store, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
-import { ChatWidget } from "@/components/ChatWidget";
 import { cn } from "@/lib/utils";
 
-
 const tabs = [
-  { to: "/", label: "Search", icon: Search },
+  { to: "/", label: "Home", icon: Home },
+  { to: "/search", label: "Search", icon: Search },
   { to: "/trustguard", label: "TrustGuard", icon: ShieldCheck },
   { to: "/seller", label: "Shop", icon: Store },
   { to: "/pricing", label: "Plans", icon: Sparkles },
@@ -33,11 +32,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <main className="mx-auto max-w-2xl px-4 py-4">{children}</main>
 
-      <ChatWidget />
-
-
       <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-border/70 bg-background/95 backdrop-blur">
-        <div className="mx-auto flex max-w-2xl items-stretch gap-1 px-4 py-2">
+        <div className="mx-auto flex max-w-2xl items-stretch gap-1 px-2 py-2">
           {tabs.map(({ to, label, icon: Icon }) => {
             const active = to === "/" ? pathname === "/" : pathname.startsWith(to);
             return (
@@ -45,7 +41,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 key={to}
                 to={to}
                 className={cn(
-                  "flex flex-1 flex-col items-center gap-1 rounded-lg py-1.5 text-[11px] font-medium transition-colors",
+                  "flex flex-1 flex-col items-center gap-1 rounded-lg py-1.5 text-[10px] font-medium transition-colors",
                   active ? "text-primary" : "text-muted-foreground hover:text-foreground",
                 )}
               >
