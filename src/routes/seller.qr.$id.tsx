@@ -39,12 +39,7 @@ function SellerQr() {
   });
 
   const order = transactions.data?.find((o) => o.id === orderId);
-  const token =
-    typeof qr.data === "string"
-      ? qr.data
-      : qr.data && typeof qr.data === "object"
-        ? JSON.stringify(qr.data)
-        : null;
+  const qrImage = qr.data ?? null;
 
   return (
     <AppShell requireRole="SELLER" back="/seller/orders">
