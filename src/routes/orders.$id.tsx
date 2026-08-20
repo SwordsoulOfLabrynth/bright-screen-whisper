@@ -99,12 +99,7 @@ function OrderTracker() {
 
   const activeIndex = data ? Math.max(0, steps.findIndex((s) => s.key === data.status)) : 0;
 
-  const qrText =
-    typeof qr.data === "string"
-      ? qr.data
-      : qr.data && typeof qr.data === "object"
-        ? JSON.stringify(qr.data)
-        : null;
+  const qrImage = qr.data ?? null;
 
   return (
     <AppShell requireRole="CUSTOMER" back="/orders">
