@@ -1,7 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Search, ShieldCheck, Store, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
+import { ChatWidget } from "@/components/ChatWidget";
 import { cn } from "@/lib/utils";
+
 
 const tabs = [
   { to: "/", label: "Search", icon: Search },
@@ -30,6 +32,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       </header>
 
       <main className="mx-auto max-w-2xl px-4 py-4">{children}</main>
+
+      <ChatWidget />
+
 
       <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-border/70 bg-background/95 backdrop-blur">
         <div className="mx-auto flex max-w-2xl items-stretch gap-1 px-4 py-2">

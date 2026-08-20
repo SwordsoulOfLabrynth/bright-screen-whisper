@@ -14,7 +14,163 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      products: {
+        Row: {
+          created_at: string
+          description: string
+          id: number
+          is_verified_safe: boolean | null
+          price: number
+          scam_analysis_summary: string | null
+          seller_id: number
+          social_post_url: string
+          title: string
+          trust_score: number | null
+        }
+        Insert: {
+          created_at: string
+          description: string
+          id?: number
+          is_verified_safe?: boolean | null
+          price: number
+          scam_analysis_summary?: string | null
+          seller_id: number
+          social_post_url: string
+          title: string
+          trust_score?: number | null
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: number
+          is_verified_safe?: boolean | null
+          price?: number
+          scam_analysis_summary?: string | null
+          seller_id?: number
+          social_post_url?: string
+          title?: string
+          trust_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fkbgw3lyxhsml3kfqnfr45o0vbj"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      refresh_tokens: {
+        Row: {
+          expiry_date: string
+          id: number
+          token: string
+          user_id: number | null
+        }
+        Insert: {
+          expiry_date: string
+          id?: number
+          token: string
+          user_id?: number | null
+        }
+        Update: {
+          expiry_date?: string
+          id?: number
+          token?: string
+          user_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk1lih5y2npsf8u5o3vhdb9y0os"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transactions: {
+        Row: {
+          amount: number
+          buyer_id: number
+          id: number
+          product_id: number
+          qr_token: string | null
+          screenshot_url: string
+          sender_phone: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          buyer_id: number
+          id?: number
+          product_id: number
+          qr_token?: string | null
+          screenshot_url: string
+          sender_phone: string
+          status: string
+          updated_at: string
+        }
+        Update: {
+          amount?: number
+          buyer_id?: number
+          id?: number
+          product_id?: number
+          qr_token?: string | null
+          screenshot_url?: string
+          sender_phone?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fkcdpkn7bkq15bjvlw9mo46l9ft"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fkijk7ii2fvalv59schbb3e0bof"
+            columns: ["buyer_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          created_at: string
+          email: string
+          id: number
+          name: string
+          password_hash: string
+          phone: string
+          role: string
+        }
+        Insert: {
+          created_at: string
+          email: string
+          id?: number
+          name: string
+          password_hash: string
+          phone: string
+          role: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: number
+          name?: string
+          password_hash?: string
+          phone?: string
+          role?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
