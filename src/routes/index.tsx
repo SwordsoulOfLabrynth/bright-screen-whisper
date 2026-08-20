@@ -1,8 +1,12 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bot, ChevronRight, QrCode, Search, ShieldCheck, Sparkles, Store } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ArrowRight, Search, ShieldCheck } from "lucide-react";
+import { useEffect } from "react";
 import { AppShell } from "@/components/AppShell";
 import { ListingCard } from "@/components/ListingCard";
-import { listings } from "@/lib/matchguard-data";
+import { api, formatMoney, statusLabel } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
+import { cacheProducts, getOrders } from "@/lib/local-store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -11,92 +15,121 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Your MatchGuard home: AI-powered search across Facebook and TikTok shop posts, escrow-protected payments, and QR handover.",
+          "Buyer home for MatchGuard: AI-matched social listings, protected escrow balance and QR handover in one mobile app.",
       },
       { property: "og:title", content: "MatchGuard — Escrow-protected social shopping" },
       {
         property: "og:description",
-        content:
-          "AI-matched Facebook and TikTok listings with payments held safely until handover is confirmed.",
+        content: "AI-matched social listings with payments held safely until handover.",
       },
     ],
   }),
-  component: Home,
+  component: CustomerHome,
 });
 
-const quickActions = [
-  { to: "/search", label: "AI search", icon: Search },
-  { to: "/trustguard", label: "Escrow", icon: ShieldCheck },
-  { to: "/seller", label: "My shop", icon: Store },
-  { to: "/pricing", label: "Plans", icon: Sparkles },
-] as const;
+function CustomerHome() {
+  const { user, ready } = useAuth();
+  const navigate = useNavigate();
 
-function Home() {
+  useEffect(() => {
+    if (ready && user?.role === "SELLER") void navigate({ to: "/seller" });
+  }, [ready, user, navigate]);
+
+  const ordersQuery = useQuery({
+    queryKey: ["local-orders"],
+    queryFn: async () => getOrders(),
+    enabled: ready && !!user,
+  });
+
+  const suggestions = useQuery({
+    queryKey: ["suggested"],
+    queryFn: async () => {
+      const results = await api.searchProducts("popular verified listings");
+      cacheProducts(results);
+      return results;
+    },
+    enabled: ready && user?.role === "CUSTOMER",
+  });
+
+  const active = (ordersQuery.data ?? []).find(
+    (o) => o.status === "PENDING_VERIFICATION" || o.status === "ESCROW_LOCKED",
+  );
+
   return (
-    <AppShell>
-      <p className="text-sm text-muted-foreground">Good day,</p>
-      <h1 className="text-2xl font-bold leading-tight">Aung Ko</h1>
+    <AppShell requireRole="CUSTOMER">
+      <p className="text-[11px] font-bold tracking-wide text-muted-foreground uppercase">
+        Good day,
+      </p>
+      <h1 className="text-3xl font-bold tracking-tight">{user?.name ?? "there"}</h1>
 
-      <section className="bg-escrow shadow-card mt-4 rounded-2xl p-5 text-primary-foreground">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-medium">
-          <ShieldCheck className="size-3.5" /> In escrow now
+      <section className="bg-escrow mt-5 rounded-3xl p-5 text-primary-foreground shadow-card">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/16 px-2.5 py-1.5 text-xs font-semibold">
+          <ShieldCheck className="size-3.5" /> Payment protected
         </span>
-        <p className="mt-3 text-3xl font-bold">$1,180</p>
-        <p className="mt-1 text-sm text-primary-foreground/80">
-          1 order awaiting QR handover with NightForge Builds.
+        <strong className="mt-4 block text-4xl font-bold tracking-tight">
+          {formatMoney(active?.amount ?? 0)}
+        </strong>
+        <p className="mt-1.5 text-sm leading-relaxed text-primary-foreground/85">
+          {active
+            ? `${active.productTitle} — ${statusLabel[active.status]}.`
+            : "No funds in escrow yet. Find a listing and pay safely."}
         </p>
         <Link
-          to="/trustguard"
-          className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-white/15 px-3 py-2 text-sm font-semibold"
+          to={active ? "/orders" : "/search"}
+          className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl bg-card px-4 text-sm font-bold text-foreground"
         >
-          <QrCode className="size-4" /> View handover
+          {active ? "View order" : "Start searching"} <ArrowRight className="size-4" />
         </Link>
       </section>
 
       <Link
         to="/search"
-        className="shadow-card mt-4 flex items-start gap-3 rounded-2xl bg-card p-4"
+        className="mt-4 flex items-center gap-3 rounded-2xl border border-border bg-card p-4"
       >
-        <span className="bg-escrow flex size-10 shrink-0 items-center justify-center rounded-full text-primary-foreground">
-          <Bot className="size-5" />
+        <span className="flex size-10.5 items-center justify-center rounded-full bg-accent text-brand-teal">
+          <Search className="size-5" />
         </span>
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold">
-            You can search with AI-powered search
-            <Sparkles className="ml-1 inline size-3.5 text-primary" />
-          </p>
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            Describe what you need in plain words — Guardian ranks real social posts for you.
-          </p>
-        </div>
-        <ChevronRight className="mt-2 size-4 shrink-0 text-muted-foreground" />
+        <span>
+          <strong className="block text-sm">Search with AI</strong>
+          <span className="mt-1 block text-xs leading-snug text-muted-foreground">
+            Describe what you need. Guardian ranks verified social posts.
+          </span>
+        </span>
       </Link>
 
-      <div className="mt-4 grid grid-cols-4 gap-2">
-        {quickActions.map(({ to, label, icon: Icon }) => (
-          <Link
-            key={to}
-            to={to}
-            className="flex flex-col items-center gap-1.5 rounded-2xl border border-border bg-card px-1 py-3 text-[11px] font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <Icon className="size-5 text-primary" />
-            {label}
-          </Link>
-        ))}
-      </div>
-
       <div className="mt-6 flex items-center justify-between">
-        <h2 className="font-semibold">Trending #TrustGuard listings</h2>
-        <Link to="/search" className="text-xs font-medium text-primary">
+        <h2 className="text-[17px] font-semibold tracking-tight">Suggested for you</h2>
+        <Link to="/search" className="text-xs font-bold text-brand-teal">
           See all
         </Link>
       </div>
 
-      <div className="mt-3 space-y-3">
-        {listings.slice(0, 3).map((listing) => (
-          <ListingCard key={listing.slug} listing={listing} />
+      <div className="mt-2 space-y-2.5">
+        {suggestions.isPending && <SkeletonList />}
+        {suggestions.isError && (
+          <p className="rounded-2xl bg-warning px-4 py-3 text-xs text-warning-foreground">
+            Couldn't load suggestions right now. Pull up search to try a query.
+          </p>
+        )}
+        {suggestions.data?.length === 0 && (
+          <p className="rounded-2xl border border-border bg-card px-4 py-6 text-center text-xs text-muted-foreground">
+            No listings published yet. Check back soon.
+          </p>
+        )}
+        {suggestions.data?.slice(0, 4).map((product) => (
+          <ListingCard key={product.productId} product={product} />
         ))}
       </div>
     </AppShell>
+  );
+}
+
+function SkeletonList() {
+  return (
+    <div className="space-y-2.5">
+      {[0, 1, 2].map((i) => (
+        <div key={i} className="h-28 animate-pulse rounded-2xl bg-muted" />
+      ))}
+    </div>
   );
 }

@@ -1,42 +1,35 @@
 import { Link } from "@tanstack/react-router";
-import { BadgeCheck, MapPin, Sparkles, TrendingUp } from "lucide-react";
-import type { Listing } from "@/lib/matchguard-data";
+import { ShieldAlert, ShieldCheck } from "lucide-react";
+import { formatMoney, type ProductRecommendationDto } from "@/lib/api";
 
-export function ListingCard({ listing }: { listing: Listing }) {
+export function ListingCard({ product }: { product: ProductRecommendationDto }) {
   return (
     <Link
-      to="/listing/$slug"
-      params={{ slug: listing.slug }}
-      className="shadow-card block rounded-2xl bg-card p-4 transition-transform hover:-translate-y-0.5"
+      to="/listing/$id"
+      params={{ id: String(product.productId) }}
+      className="block rounded-2xl border border-border bg-card p-4"
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-[11px] font-semibold tracking-wide text-muted-foreground">
-            {listing.source} <span className="px-1">·</span> {listing.posted}
-          </p>
-          <h3 className="mt-1 font-semibold leading-snug text-foreground">{listing.title}</h3>
-        </div>
-        <div className="shrink-0 text-right">
-          <p className="text-xl font-bold">{listing.price}</p>
-          {listing.sponsored && (
-            <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-warning/25 px-2 py-0.5 text-[10px] font-medium text-warning-foreground">
-              <Sparkles className="size-3" /> Sponsored
-            </span>
-          )}
-        </div>
+      <div className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
+        {product.socialPostUrl?.includes("tiktok") ? "TikTok" : "Facebook"} · Social post
       </div>
-
-      <p className="mt-3 text-sm text-muted-foreground">{listing.verdict}</p>
-
-      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-        <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2.5 py-1 font-semibold text-primary">
-          <TrendingUp className="size-3.5" /> {listing.match}% match
+      <div className="mt-2 flex items-start justify-between gap-3">
+        <h3 className="text-[15px] leading-tight font-semibold tracking-tight">{product.title}</h3>
+        <span className="text-lg font-bold whitespace-nowrap">{formatMoney(product.price)}</span>
+      </div>
+      <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+        {product.compatibilityInsight || product.description}
+      </p>
+      <div className="mt-3 flex items-center justify-between gap-2">
+        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-muted-foreground">
+          {product.isVerifiedSafe ? (
+            <ShieldCheck className="size-3.5 text-brand-teal" />
+          ) : (
+            <ShieldAlert className="size-3.5 text-destructive" />
+          )}
+          Trust {product.trustScore}
         </span>
-        <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-1 text-secondary-foreground">
-          <BadgeCheck className="size-3.5 text-primary" /> {listing.seller} · Trust {listing.trust}
-        </span>
-        <span className="inline-flex items-center gap-1 text-muted-foreground">
-          <MapPin className="size-3.5" /> {listing.city}
+        <span className="rounded-full bg-success px-2 py-1 text-[11px] font-bold text-success-foreground">
+          {product.fitScore}% match
         </span>
       </div>
     </Link>

@@ -10,20 +10,33 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as AccountRouteImport } from './routes/account'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as SearchRouteImport } from './routes/search'
-import { Route as SellerRouteImport } from './routes/seller'
-import { Route as TrustguardRouteImport } from './routes/trustguard'
-import { Route as ListingSlugRouteImport } from './routes/listing.$slug'
+import { Route as CheckoutIdRouteImport } from './routes/checkout.$id'
+import { Route as ListingIdRouteImport } from './routes/listing.$id'
+import { Route as OrdersIndexRouteImport } from './routes/orders.index'
+import { Route as OrdersIdRouteImport } from './routes/orders.$id'
+import { Route as SellerIndexRouteImport } from './routes/seller.index'
+import { Route as SellerInventoryRouteImport } from './routes/seller.inventory'
+import { Route as SellerOrdersRouteImport } from './routes/seller.orders'
+import { Route as SellerShopRouteImport } from './routes/seller.shop'
+import { Route as SellerQrIdRouteImport } from './routes/seller.qr.$id'
+import { Route as ApiPublicMgSplatRouteImport } from './routes/api/public/mg.$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PricingRoute = PricingRouteImport.update({
-  id: '/pricing',
-  path: '/pricing',
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -31,71 +44,172 @@ const SearchRoute = SearchRouteImport.update({
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SellerRoute = SellerRouteImport.update({
-  id: '/seller',
-  path: '/seller',
+const CheckoutIdRoute = CheckoutIdRouteImport.update({
+  id: '/checkout/$id',
+  path: '/checkout/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TrustguardRoute = TrustguardRouteImport.update({
-  id: '/trustguard',
-  path: '/trustguard',
+const ListingIdRoute = ListingIdRouteImport.update({
+  id: '/listing/$id',
+  path: '/listing/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ListingSlugRoute = ListingSlugRouteImport.update({
-  id: '/listing/$slug',
-  path: '/listing/$slug',
+const OrdersIndexRoute = OrdersIndexRouteImport.update({
+  id: '/orders/',
+  path: '/orders/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersIdRoute = OrdersIdRouteImport.update({
+  id: '/orders/$id',
+  path: '/orders/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SellerIndexRoute = SellerIndexRouteImport.update({
+  id: '/seller/',
+  path: '/seller/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SellerInventoryRoute = SellerInventoryRouteImport.update({
+  id: '/seller/inventory',
+  path: '/seller/inventory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SellerOrdersRoute = SellerOrdersRouteImport.update({
+  id: '/seller/orders',
+  path: '/seller/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SellerShopRoute = SellerShopRouteImport.update({
+  id: '/seller/shop',
+  path: '/seller/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SellerQrIdRoute = SellerQrIdRouteImport.update({
+  id: '/seller/qr/$id',
+  path: '/seller/qr/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicMgSplatRoute = ApiPublicMgSplatRouteImport.update({
+  id: '/api/public/mg/$',
+  path: '/api/public/mg/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/pricing': typeof PricingRoute
+  '/account': typeof AccountRoute
+  '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
-  '/seller': typeof SellerRoute
-  '/trustguard': typeof TrustguardRoute
-  '/listing/$slug': typeof ListingSlugRoute
+  '/checkout/$id': typeof CheckoutIdRoute
+  '/listing/$id': typeof ListingIdRoute
+  '/orders/$id': typeof OrdersIdRoute
+  '/seller/inventory': typeof SellerInventoryRoute
+  '/seller/orders': typeof SellerOrdersRoute
+  '/seller/shop': typeof SellerShopRoute
+  '/orders/': typeof OrdersIndexRoute
+  '/seller/': typeof SellerIndexRoute
+  '/seller/qr/$id': typeof SellerQrIdRoute
+  '/api/public/mg/$': typeof ApiPublicMgSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/pricing': typeof PricingRoute
+  '/account': typeof AccountRoute
+  '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
-  '/seller': typeof SellerRoute
-  '/trustguard': typeof TrustguardRoute
-  '/listing/$slug': typeof ListingSlugRoute
+  '/checkout/$id': typeof CheckoutIdRoute
+  '/listing/$id': typeof ListingIdRoute
+  '/orders/$id': typeof OrdersIdRoute
+  '/seller/inventory': typeof SellerInventoryRoute
+  '/seller/orders': typeof SellerOrdersRoute
+  '/seller/shop': typeof SellerShopRoute
+  '/orders': typeof OrdersIndexRoute
+  '/seller': typeof SellerIndexRoute
+  '/seller/qr/$id': typeof SellerQrIdRoute
+  '/api/public/mg/$': typeof ApiPublicMgSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/pricing': typeof PricingRoute
+  '/account': typeof AccountRoute
+  '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
-  '/seller': typeof SellerRoute
-  '/trustguard': typeof TrustguardRoute
-  '/listing/$slug': typeof ListingSlugRoute
+  '/checkout/$id': typeof CheckoutIdRoute
+  '/listing/$id': typeof ListingIdRoute
+  '/orders/$id': typeof OrdersIdRoute
+  '/seller/inventory': typeof SellerInventoryRoute
+  '/seller/orders': typeof SellerOrdersRoute
+  '/seller/shop': typeof SellerShopRoute
+  '/orders/': typeof OrdersIndexRoute
+  '/seller/': typeof SellerIndexRoute
+  '/seller/qr/$id': typeof SellerQrIdRoute
+  '/api/public/mg/$': typeof ApiPublicMgSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/pricing' | '/search' | '/seller' | '/trustguard' | '/listing/$slug'
+    | '/'
+    | '/account'
+    | '/auth'
+    | '/search'
+    | '/checkout/$id'
+    | '/listing/$id'
+    | '/orders/$id'
+    | '/seller/inventory'
+    | '/seller/orders'
+    | '/seller/shop'
+    | '/orders/'
+    | '/seller/'
+    | '/seller/qr/$id'
+    | '/api/public/mg/$'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/pricing' | '/search' | '/seller' | '/trustguard' | '/listing/$slug'
+    | '/'
+    | '/account'
+    | '/auth'
+    | '/search'
+    | '/checkout/$id'
+    | '/listing/$id'
+    | '/orders/$id'
+    | '/seller/inventory'
+    | '/seller/orders'
+    | '/seller/shop'
+    | '/orders'
+    | '/seller'
+    | '/seller/qr/$id'
+    | '/api/public/mg/$'
   id:
     | '__root__'
     | '/'
-    | '/pricing'
+    | '/account'
+    | '/auth'
     | '/search'
-    | '/seller'
-    | '/trustguard'
-    | '/listing/$slug'
+    | '/checkout/$id'
+    | '/listing/$id'
+    | '/orders/$id'
+    | '/seller/inventory'
+    | '/seller/orders'
+    | '/seller/shop'
+    | '/orders/'
+    | '/seller/'
+    | '/seller/qr/$id'
+    | '/api/public/mg/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  PricingRoute: typeof PricingRoute
+  AccountRoute: typeof AccountRoute
+  AuthRoute: typeof AuthRoute
   SearchRoute: typeof SearchRoute
-  SellerRoute: typeof SellerRoute
-  TrustguardRoute: typeof TrustguardRoute
-  ListingSlugRoute: typeof ListingSlugRoute
+  CheckoutIdRoute: typeof CheckoutIdRoute
+  ListingIdRoute: typeof ListingIdRoute
+  OrdersIdRoute: typeof OrdersIdRoute
+  SellerInventoryRoute: typeof SellerInventoryRoute
+  SellerOrdersRoute: typeof SellerOrdersRoute
+  SellerShopRoute: typeof SellerShopRoute
+  OrdersIndexRoute: typeof OrdersIndexRoute
+  SellerIndexRoute: typeof SellerIndexRoute
+  SellerQrIdRoute: typeof SellerQrIdRoute
+  ApiPublicMgSplatRoute: typeof ApiPublicMgSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -107,11 +221,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/pricing': {
-      id: '/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof PricingRouteImport
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -121,25 +242,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/seller': {
-      id: '/seller'
+    '/checkout/$id': {
+      id: '/checkout/$id'
+      path: '/checkout/$id'
+      fullPath: '/checkout/$id'
+      preLoaderRoute: typeof CheckoutIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/listing/$id': {
+      id: '/listing/$id'
+      path: '/listing/$id'
+      fullPath: '/listing/$id'
+      preLoaderRoute: typeof ListingIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders/': {
+      id: '/orders/'
+      path: '/orders'
+      fullPath: '/orders/'
+      preLoaderRoute: typeof OrdersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders/$id': {
+      id: '/orders/$id'
+      path: '/orders/$id'
+      fullPath: '/orders/$id'
+      preLoaderRoute: typeof OrdersIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/seller/': {
+      id: '/seller/'
       path: '/seller'
-      fullPath: '/seller'
-      preLoaderRoute: typeof SellerRouteImport
+      fullPath: '/seller/'
+      preLoaderRoute: typeof SellerIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/trustguard': {
-      id: '/trustguard'
-      path: '/trustguard'
-      fullPath: '/trustguard'
-      preLoaderRoute: typeof TrustguardRouteImport
+    '/seller/inventory': {
+      id: '/seller/inventory'
+      path: '/seller/inventory'
+      fullPath: '/seller/inventory'
+      preLoaderRoute: typeof SellerInventoryRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/listing/$slug': {
-      id: '/listing/$slug'
-      path: '/listing/$slug'
-      fullPath: '/listing/$slug'
-      preLoaderRoute: typeof ListingSlugRouteImport
+    '/seller/orders': {
+      id: '/seller/orders'
+      path: '/seller/orders'
+      fullPath: '/seller/orders'
+      preLoaderRoute: typeof SellerOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/seller/shop': {
+      id: '/seller/shop'
+      path: '/seller/shop'
+      fullPath: '/seller/shop'
+      preLoaderRoute: typeof SellerShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/seller/qr/$id': {
+      id: '/seller/qr/$id'
+      path: '/seller/qr/$id'
+      fullPath: '/seller/qr/$id'
+      preLoaderRoute: typeof SellerQrIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/mg/$': {
+      id: '/api/public/mg/$'
+      path: '/api/public/mg/$'
+      fullPath: '/api/public/mg/$'
+      preLoaderRoute: typeof ApiPublicMgSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -147,11 +317,19 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  PricingRoute: PricingRoute,
+  AccountRoute: AccountRoute,
+  AuthRoute: AuthRoute,
   SearchRoute: SearchRoute,
-  SellerRoute: SellerRoute,
-  TrustguardRoute: TrustguardRoute,
-  ListingSlugRoute: ListingSlugRoute,
+  CheckoutIdRoute: CheckoutIdRoute,
+  ListingIdRoute: ListingIdRoute,
+  OrdersIdRoute: OrdersIdRoute,
+  SellerInventoryRoute: SellerInventoryRoute,
+  SellerOrdersRoute: SellerOrdersRoute,
+  SellerShopRoute: SellerShopRoute,
+  OrdersIndexRoute: OrdersIndexRoute,
+  SellerIndexRoute: SellerIndexRoute,
+  SellerQrIdRoute: SellerQrIdRoute,
+  ApiPublicMgSplatRoute: ApiPublicMgSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
