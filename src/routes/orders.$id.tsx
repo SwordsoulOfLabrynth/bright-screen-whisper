@@ -75,12 +75,7 @@ function OrderTracker() {
   const data: TransactionResponseDto | null | undefined = order.data;
 
 
-  const qr = useQuery({
-    queryKey: ["order-qr", orderId],
-    queryFn: () => api.transactionQr(orderId),
-    enabled: data?.status === "ESCROW_LOCKED",
-    retry: false,
-  });
+  // The QR endpoint is seller-scoped; buyers scan the seller's code instead.
 
 
   const release = useMutation({
@@ -108,7 +103,7 @@ function OrderTracker() {
 
   const activeIndex = data ? Math.max(0, steps.findIndex((s) => s.key === data.status)) : 0;
 
-  const qrImage = qr.data ?? null;
+  
 
   return (
     <AppShell requireRole="CUSTOMER" back="/orders">
@@ -169,17 +164,11 @@ function OrderTracker() {
           {data.status === "ESCROW_LOCKED" && (
             <div className="mt-4 rounded-3xl border border-border bg-card p-5 text-center">
               <QrCode className="mx-auto size-6 text-brand-teal" />
-              <h2 className="mt-2 text-sm font-semibold">Handover QR</h2>
+              <h2 className="mt-2 text-sm font-semibold">Handover token</h2>
               <p className="mt-1 text-xs leading-snug text-muted-foreground">
-                Show this to the seller, or paste the token they scan to release funds.
+                Scan the seller's handover QR at pickup, then paste the token here to release
+                funds.
               </p>
-              {qrImage && (
-                <img
-                  src={qrImage}
-                  alt={`Handover QR code for order ${data.id}`}
-                  className="mx-auto mt-3 size-44 rounded-xl bg-background p-2"
-                />
-              )}
               <input
                 value={qrToken}
                 onChange={(e) => setQrToken(e.target.value)}

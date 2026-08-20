@@ -232,27 +232,27 @@ export const api = {
     });
   },
 
+  // SELLER role
   sellerTransactions: (sellerId: number) =>
     request<TransactionResponseDto[]>(`/transactions/seller/${sellerId}`),
 
-  // Buyer-side read: backend exposes it on the same path, keyed by buyerId.
+  // CUSTOMER role
   buyerTransactions: (buyerId: number) =>
-    request<TransactionResponseDto[]>(`/transactions/seller/${buyerId}`),
-
+    request<TransactionResponseDto[]>(`/transactions/buyer/${buyerId}`),
 
   approveTransaction: (transactionId: number, sellerId: number) =>
     request<TransactionResponseDto>(`/transactions/${transactionId}/approve/${sellerId}`, {
       method: "POST",
     }),
 
-  // Backend exposes this as PATCH (an update), not a read.
+  // SELLER role — PATCH (an update), not a read.
   updateTransactionStatus: (transactionId: number, status: TransactionStatus) =>
     request<TransactionResponseDto>(`/transactions/${transactionId}/status`, {
       method: "PATCH",
       body: { status },
     }),
 
-  // Backend returns image/png — resolve to an object URL for <img src>.
+  // SELLER role — backend returns image/png, resolve to an object URL for <img src>.
   transactionQr: async (transactionId: number) => {
     const session = readSession();
     const headers: Record<string, string> = { accept: "image/png" };
@@ -261,22 +261,6 @@ export const api = {
     if (!res.ok) throw new ApiError(res.status, `Could not load handover QR (${res.status})`);
     const blob = await res.blob();
     return URL.createObjectURL(blob);
-  },
-
-
-  // The backend has no buyer-side transaction read yet: /transactions/seller/{id}
-  // filters by seller id, so a buyer gets nothing back. The QR endpoint only
-  // answers 200 once the transaction is ESCROW_LOCKED, so it doubles as a probe.
-  isEscrowLocked: async (transactionId: number) => {
-    const session = readSession();
-    const headers: Record<string, string> = { accept: "image/png" };
-    if (session?.accessToken) headers["Authorization"] = `Bearer ${session.accessToken}`;
-    try {
-      const res = await fetch(`${API_BASE}/transactions/${transactionId}/qr`, { headers });
-      return res.ok;
-    } catch {
-      return false;
-    }
   },
 
   releaseTransaction: (input: { transactionId: number; qrToken: string }) =>
