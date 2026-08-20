@@ -264,6 +264,21 @@ export const api = {
   },
 
 
+  // The backend has no buyer-side transaction read yet: /transactions/seller/{id}
+  // filters by seller id, so a buyer gets nothing back. The QR endpoint only
+  // answers 200 once the transaction is ESCROW_LOCKED, so it doubles as a probe.
+  isEscrowLocked: async (transactionId: number) => {
+    const session = readSession();
+    const headers: Record<string, string> = { accept: "image/png" };
+    if (session?.accessToken) headers["Authorization"] = `Bearer ${session.accessToken}`;
+    try {
+      const res = await fetch(`${API_BASE}/transactions/${transactionId}/qr`, { headers });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  },
+
   releaseTransaction: (input: { transactionId: number; qrToken: string }) =>
     request<TransactionResponseDto>("/transactions/release", { method: "POST", body: input }),
 
