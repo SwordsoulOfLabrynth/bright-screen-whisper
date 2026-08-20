@@ -56,12 +56,31 @@ function OrderTracker() {
     queryFn: async () => getOrder(orderId),
   });
 
+  // Live status straight from the backend, polled while the order is active.
+  const live = useQuery({
+    queryKey: ["order-status", orderId],
+    queryFn: async () => normaliseStatus(await api.transactionStatus(orderId)),
+    enabled: Number.isFinite(orderId),
+    refetchInterval: 15000,
+    retry: false,
+  });
+
+  const cached = order.data;
+  const data = cached && live.data && live.data !== cached.status
+    ? { ...cached, status: live.data }
+    : cached;
+
+  useEffect(() => {
+    if (data && cached && data.status !== cached.status) saveOrder(data);
+  }, [data, cached]);
+
   const qr = useQuery({
     queryKey: ["order-qr", orderId],
     queryFn: () => api.transactionQr(orderId),
-    enabled: order.data?.status === "ESCROW_LOCKED",
+    enabled: data?.status === "ESCROW_LOCKED",
     retry: false,
   });
+
 
   const release = useMutation({
     mutationFn: () => api.releaseTransaction({ transactionId: orderId, qrToken }),
