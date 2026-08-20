@@ -239,10 +239,12 @@ export const api = {
       method: "POST",
     }),
 
-  transactionStatus: (transactionId: number) =>
-    request<TransactionResponseDto | TransactionStatus | { status: TransactionStatus }>(
-      `/transactions/${transactionId}/status`,
-    ),
+  // Backend exposes this as PATCH (an update), not a read.
+  updateTransactionStatus: (transactionId: number, status: TransactionStatus) =>
+    request<TransactionResponseDto>(`/transactions/${transactionId}/status`, {
+      method: "PATCH",
+      body: { status },
+    }),
 
   transactionQr: (transactionId: number) =>
     request<unknown>(`/transactions/${transactionId}/qr`),
