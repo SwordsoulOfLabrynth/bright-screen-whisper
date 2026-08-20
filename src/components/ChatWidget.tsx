@@ -48,7 +48,7 @@ export function ChatWidget() {
   return (
     <>
       {open && (
-        <div className="shadow-card fixed bottom-28 right-4 z-40 flex h-[26rem] w-[min(21rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-border bg-card sm:bottom-24">
+        <div className="shadow-card fixed bottom-40 right-4 z-40 flex h-[26rem] w-[min(21rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-border bg-card">
           <div className="bg-escrow flex items-center justify-between px-4 py-3 text-primary-foreground">
             <div className="flex items-center gap-2">
               <ShieldCheck className="size-4" />
