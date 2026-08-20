@@ -55,6 +55,7 @@ export type TransactionResponseDto = {
   screenshotUrl: string | null;
   aiVerificationNotes?: string | null;
   createdAt?: string | null;
+  updatedAt?: string | null;
   qrToken?: string | null;
 };
 
@@ -246,8 +247,16 @@ export const api = {
       body: { status },
     }),
 
-  transactionQr: (transactionId: number) =>
-    request<unknown>(`/transactions/${transactionId}/qr`),
+  // Backend returns image/png — resolve to an object URL for <img src>.
+  transactionQr: async (transactionId: number) => {
+    const session = readSession();
+    const headers: Record<string, string> = { accept: "image/png" };
+    if (session?.accessToken) headers["Authorization"] = `Bearer ${session.accessToken}`;
+    const res = await fetch(`${API_BASE}/transactions/${transactionId}/qr`, { headers });
+    if (!res.ok) throw new ApiError(res.status, `Could not load handover QR (${res.status})`);
+    const blob = await res.blob();
+    return URL.createObjectURL(blob);
+  },
 
 
   releaseTransaction: (input: { transactionId: number; qrToken: string }) =>
