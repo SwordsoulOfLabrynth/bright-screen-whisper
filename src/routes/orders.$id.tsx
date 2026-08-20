@@ -74,9 +74,9 @@ function OrderTracker() {
   });
 
   const cached = order.data;
-  const data = cached && live.data && live.data !== cached.status
-    ? { ...cached, status: live.data }
-    : cached;
+  const data: TransactionResponseDto | null | undefined =
+    cached && live.data && live.data !== cached.status ? { ...cached, status: live.data } : cached;
+
 
   useEffect(() => {
     if (data && cached && data.status !== cached.status) saveOrder(data);
