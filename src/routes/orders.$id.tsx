@@ -59,12 +59,25 @@ function OrderTracker() {
   const [qrToken, setQrToken] = useState("");
   const [message, setMessage] = useState<string | null>(null);
 
+  const { user } = useAuth();
   const order = useQuery({
-    queryKey: ["order", orderId],
-    queryFn: async () => getOrder(orderId),
+    queryKey: ["order", orderId, user?.id ?? 0],
+    queryFn: async () => {
+      if (user) {
+        try {
+          const live = await api.buyerTransactions(user.id);
+          if (Array.isArray(live)) mergeOrders(live);
+        } catch {
+          /* fall back to cache */
+        }
+      }
+      return getOrder(orderId);
+    },
+    refetchInterval: 15000,
   });
 
   const data: TransactionResponseDto | null | undefined = order.data;
+
 
   const qr = useQuery({
     queryKey: ["order-qr", orderId],
