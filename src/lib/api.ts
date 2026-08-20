@@ -132,14 +132,28 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     payload = JSON.stringify(body);
   }
 
-  const res = await fetch(`${API_BASE}${path}`, { method, headers, body: payload });
+  // The upstream gateway intermittently rejects perfectly valid calls with an
+  // empty 403/502, so transient blank rejections are retried a couple of times.
+  const send = async () => {
+    let res = await fetch(`${API_BASE}${path}`, { method, headers, body: payload });
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      if (![403, 502, 503, 504].includes(res.status)) break;
+      const clone = res.clone();
+      const text = await clone.text();
+      if (text.trim().length > 0) break;
+      await new Promise((resolve) => setTimeout(resolve, 400 * (attempt + 1)));
+      res = await fetch(`${API_BASE}${path}`, { method, headers, body: payload });
+    }
+    return res;
+  };
+
+  const res = await send();
 
   if (res.status === 401 && auth && session?.refreshToken) {
     const refreshed = await refreshSession(session.refreshToken);
     if (refreshed) {
       headers["Authorization"] = `Bearer ${refreshed.accessToken}`;
-      const retry = await fetch(`${API_BASE}${path}`, { method, headers, body: payload });
-      return parse<T>(retry);
+      return parse<T>(await send());
     }
   }
 
