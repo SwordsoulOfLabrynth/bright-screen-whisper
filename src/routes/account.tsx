@@ -24,6 +24,12 @@ export const Route = createFileRoute("/account")({
 function AccountScreen() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [plan, setPlanState] = useState<PlanId>("free");
+
+  useEffect(() => {
+    if (user) setPlanState(getPlan(user.id));
+  }, [user]);
+
 
   return (
     <AppShell requireRole="CUSTOMER">
