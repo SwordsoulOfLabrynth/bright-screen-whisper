@@ -74,8 +74,10 @@ function rankResults(items: ProductRecommendationDto[], query: string) {
     };
   });
 
-  const relevant = scored.filter((s) => s._hits > 0 && s._priceOk);
-  const list = (relevant.length ? relevant : scored).sort((a, b) => b.fitScore - a.fitScore);
+  // Only genuinely relevant listings are shown — never the whole catalogue.
+  const strict = scored.filter((s) => s._hits > 0 && s._priceOk);
+  const loose = scored.filter((s) => s._hits > 0);
+  const list = (strict.length ? strict : loose).sort((a, b) => b.fitScore - a.fitScore);
   return list.map(({ _hits, _priceOk, ...rest }) => rest) as ProductRecommendationDto[];
 }
 
