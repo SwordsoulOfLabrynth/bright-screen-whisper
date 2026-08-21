@@ -1,6 +1,6 @@
-// Frontend-only showcase catalogue. The live backend currently only holds a few
-// computer listings, so these demo posts give the marketplace realistic variety
-// across categories. IDs start at 900001 so they never clash with backend rows.
+// Frontend-only showcase catalogue of skincare listings. The live backend only
+// holds a handful of computer posts, so these give the marketplace realistic
+// beauty inventory. IDs start at 900001 so they never clash with backend rows.
 import type { ProductRecommendationDto } from "@/lib/api";
 
 type Seed = {
@@ -10,171 +10,189 @@ type Seed = {
   price: number;
   url: string;
   trust: number;
-  safe?: boolean;
+  note: string;
 };
 
 const seeds: Seed[] = [
   {
     id: 900001,
-    title: "iPhone 13 128GB — battery 91%",
+    title: "COSRX Advanced Snail 96 Mucin Power Essence 100ml",
     description:
-      "Used iPhone 13 in midnight blue, 128GB, battery health 91%, no scratches, box and cable included. Phone, mobile, smartphone.",
-    price: 1250000,
-    url: "https://facebook.com/mobilehub/posts/1",
-    trust: 88,
+      "Authentic Korean snail mucin essence for hydration, glass skin and acne scar fading. Skincare, serum, essence, moisturiser, K-beauty.",
+    price: 42000,
+    url: "https://facebook.com/glowlab/posts/1",
+    trust: 94,
+    note: "Seller verified for 14 months, 210 completed escrow orders, batch code matches distributor records.",
   },
   {
     id: 900002,
-    title: "Samsung Galaxy A55 (new, sealed)",
+    title: "Anua Heartleaf 77% Soothing Toner 250ml",
     description:
-      "Brand new sealed Samsung Galaxy A55 8/256GB, one year Myanmar warranty. Phone, smartphone, android.",
-    price: 980000,
-    url: "https://facebook.com/mobilehub/posts/2",
-    trust: 93,
+      "Calming toner for sensitive and acne prone skin, alcohol free. Skincare, toner, sensitive skin, redness, K-beauty.",
+    price: 38000,
+    url: "https://facebook.com/glowlab/posts/2",
+    trust: 91,
+    note: "Original invoice photo attached, price sits within the normal market range.",
   },
   {
     id: 900003,
-    title: "Sony WH-1000XM4 headphones",
+    title: "Beauty of Joseon Relief Sun SPF50+ PA++++",
     description:
-      "Noise cancelling wireless headphones, great for study and travel. Audio, headphone, earphone, music.",
-    price: 420000,
-    url: "https://tiktok.com/@soundlab/video/3",
-    trust: 84,
+      "Rice and probiotics sunscreen, no white cast, daily UV protection. Sunscreen, SPF, sun cream, skincare, face.",
+    price: 26000,
+    url: "https://tiktok.com/@glowlab/video/3",
+    trust: 96,
+    note: "Highest trust band: sealed stock, verified importer, zero disputes on 340 sales.",
   },
   {
     id: 900004,
-    title: "Canon EOS M50 Mark II + 15-45mm",
+    title: "La Roche-Posay Effaclar Duo+ M 40ml",
     description:
-      "Mirrorless camera kit for vlogging, interviews and indoor video. Camera, photography, vlog, content creator.",
-    price: 1450000,
-    url: "https://facebook.com/lenshouse/posts/4",
-    trust: 90,
+      "Pharmacy anti-blemish cream for oily skin, reduces acne marks and pores. Acne, blemish, cream, oily skin, treatment.",
+    price: 58000,
+    url: "https://facebook.com/pharmaglow/posts/4",
+    trust: 88,
+    note: "Pharmacy-sourced with expiry 2028, seller responds within an hour.",
   },
   {
     id: 900005,
-    title: "Ergonomic office chair with lumbar support",
+    title: "The Ordinary Niacinamide 10% + Zinc 1% 30ml",
     description:
-      "Mesh office chair, adjustable armrest and headrest, perfect for long desk work. Furniture, home, chair, office.",
-    price: 265000,
-    url: "https://facebook.com/homefit/posts/5",
-    trust: 81,
+      "Oil control and blemish serum for enlarged pores and uneven tone. Serum, niacinamide, pores, oily skin, brightening.",
+    price: 24000,
+    url: "https://tiktok.com/@skinbarmm/video/5",
+    trust: 83,
+    note: "Genuine batch, but the seller ships only twice a week — plan for slower handover.",
   },
   {
     id: 900006,
-    title: "Uniqlo-style linen shirt (unisex, M/L/XL)",
+    title: "CeraVe Foaming Facial Cleanser 473ml",
     description:
-      "Breathable linen shirt for hot weather, three sizes, four colours. Fashion, clothing, shirt, men, women.",
-    price: 32000,
-    url: "https://tiktok.com/@wearlight/video/6",
-    trust: 76,
+      "Ceramide cleanser for normal to oily skin, fragrance free, dermatologist favourite. Cleanser, face wash, ceramide, daily.",
+    price: 46000,
+    url: "https://facebook.com/pharmaglow/posts/6",
+    trust: 90,
+    note: "Large size verified against importer packaging, 96% positive buyer feedback.",
   },
   {
     id: 900007,
-    title: "Korean skincare set — cleanser, toner, serum",
+    title: "SKIN1004 Madagascar Centella Ampoule 100ml",
     description:
-      "Full routine set for oily and acne prone skin, authentic Korean beauty products. Skincare, beauty, cosmetics, sunscreen.",
-    price: 78000,
-    url: "https://facebook.com/glowlab/posts/7",
+      "Centella asiatica ampoule for irritated, breakout-prone skin. Ampoule, centella, cica, soothing, hydration.",
+    price: 35000,
+    url: "https://facebook.com/cicahouse/posts/7",
     trust: 87,
+    note: "Consistent listing history, photos are original rather than reposted stock images.",
   },
   {
     id: 900008,
-    title: "Nike Air Zoom Pegasus 40 (size 41-44)",
+    title: "Laneige Water Sleeping Mask 70ml",
     description:
-      "Running shoes, lightly used, great cushioning for daily runs. Shoes, sneaker, sport, running, fitness.",
-    price: 210000,
-    url: "https://facebook.com/soleplug/posts/8",
+      "Overnight hydrating mask for dry and dull skin. Night mask, sleeping pack, moisturiser, hydration, K-beauty.",
+    price: 52000,
+    url: "https://tiktok.com/@nightglow/video/8",
     trust: 79,
+    note: "Legitimate seller but counterfeits are common for this item — inspect the seal at handover.",
   },
   {
     id: 900009,
-    title: "Yonex badminton racket + 3 shuttles",
+    title: "Some By Mi AHA BHA PHA 30 Days Miracle Toner 150ml",
     description:
-      "Lightweight racket for intermediate players, includes grip tape and shuttles. Sport, badminton, fitness, outdoor.",
-    price: 96000,
-    url: "https://tiktok.com/@courtside/video/9",
-    trust: 82,
+      "Exfoliating acid toner that clears blackheads and rough texture. Toner, exfoliant, AHA, BHA, acne.",
+    price: 31000,
+    url: "https://facebook.com/skinbarmm/posts/9",
+    trust: 85,
+    note: "Verified stock, 62 completed escrow orders with no disputes.",
   },
   {
     id: 900010,
-    title: "Baby stroller, foldable travel system",
+    title: "Innisfree Green Tea Hyaluronic Serum 80ml",
     description:
-      "Compact foldable stroller with sun canopy and storage basket. Baby, kids, stroller, family, mother care.",
-    price: 185000,
-    url: "https://facebook.com/tinysteps/posts/10",
-    trust: 85,
+      "Lightweight hydrating serum for combination skin. Serum, hyaluronic acid, hydration, green tea, daily.",
+    price: 33000,
+    url: "https://facebook.com/glowlab/posts/10",
+    trust: 82,
+    note: "Two buyers reported slow replies; escrow still protects the payment fully.",
   },
   {
     id: 900011,
-    title: "Rice cooker 1.8L with steamer tray",
+    title: "Medicube Zero Pore Pad 2.0 (70 pads)",
     description:
-      "Family size rice cooker, non-stick pot and steamer basket. Kitchen, home appliance, cooking.",
-    price: 74000,
-    url: "https://facebook.com/homefit/posts/11",
-    trust: 80,
+      "Toner pads for pore care and sebum control on oily skin. Pads, pore, exfoliating, oily skin, toner.",
+    price: 47000,
+    url: "https://tiktok.com/@poreclinic/video/11",
+    trust: 76,
+    note: "Newer shop with only 9 sales — Guardian flags limited history, not fraud.",
   },
   {
     id: 900012,
-    title: "Xiaomi Mi Band 8 fitness tracker",
+    title: "Bioderma Sensibio H2O Micellar Water 500ml",
     description:
-      "Heart rate, sleep and step tracking with 14-day battery. Wearable, watch, fitness, health, sport.",
-    price: 68000,
-    url: "https://tiktok.com/@gadgetgo/video/12",
+      "Gentle makeup remover for sensitive skin, no rinse needed. Cleanser, micellar water, makeup remover, sensitive.",
+    price: 54000,
+    url: "https://facebook.com/pharmaglow/posts/12",
     trust: 89,
+    note: "Distributor sticker visible in the post photos, expiry 2029.",
   },
   {
     id: 900013,
-    title: "Acoustic guitar, beginner bundle",
+    title: "Round Lab 1025 Dokdo Cleanser 150ml",
     description:
-      "38-inch acoustic guitar with bag, strap, picks and spare strings. Music, instrument, guitar, hobby.",
-    price: 145000,
-    url: "https://facebook.com/melodyshop/posts/13",
-    trust: 77,
+      "Mild low-pH cleanser with deep sea water for barrier care. Cleanser, low pH, barrier, sensitive, hydration.",
+    price: 29000,
+    url: "https://facebook.com/cicahouse/posts/13",
+    trust: 84,
+    note: "Steady seller, all handovers completed within 48 hours.",
   },
   {
     id: 900014,
-    title: "Study desk lamp with wireless charging",
+    title: "Torriden DIVE-IN Low Molecular Hyaluronic Serum 50ml",
     description:
-      "LED desk lamp, three colour modes, built-in phone wireless charger. Home, study, lamp, light, desk.",
-    price: 42000,
-    url: "https://tiktok.com/@lampline/video/14",
-    trust: 83,
+      "Deep hydration serum for dehydrated and tight skin. Serum, hyaluronic, hydration, lightweight, vegan.",
+    price: 36000,
+    url: "https://tiktok.com/@nightglow/video/14",
+    trust: 86,
+    note: "Photos and price consistent with genuine retail stock.",
   },
   {
     id: 900015,
-    title: "Anker 20000mAh power bank 65W",
+    title: "Vitamin C 20% Brightening Serum 30ml (unbranded refill)",
     description:
-      "Fast charging power bank for phone and laptop, USB-C PD. Accessory, charger, travel, battery.",
-    price: 88000,
-    url: "https://facebook.com/gadgetgo/posts/15",
-    trust: 91,
+      "Decanted vitamin C serum for dark spots and dullness. Serum, vitamin C, brightening, dark spot, whitening.",
+    price: 9000,
+    url: "https://facebook.com/quickdeals/posts/15",
+    trust: 38,
+    note: "High risk: unbranded decant, price far below market, seller asks to chat off-platform.",
   },
   {
     id: 900016,
-    title: "Handmade rattan handbag",
+    title: "Whitening cream — 7 days guaranteed result",
     description:
-      "Locally handmade rattan bag, fits phone, wallet and small umbrella. Fashion, bag, handbag, women, accessory.",
-    price: 39000,
-    url: "https://facebook.com/craftmm/posts/16",
-    trust: 74,
+      "Fast whitening cream claiming instant results in one week. Whitening, bleaching, cream, face.",
+    price: 12000,
+    url: "https://facebook.com/quickdeals/posts/16",
+    trust: 29,
+    note: "Guardian warning: unrealistic claims, no ingredient list, pattern matches mercury-cream scams.",
   },
   {
     id: 900017,
-    title: "Gaming laptop — Ryzen 7, RTX 4060, 16GB",
+    title: "Skin1004 Poremizing Clear Pad + Cleanser bundle",
     description:
-      "144Hz gaming laptop with upgrade room, warranty until 2027. Laptop, computer, gaming, PC.",
-    price: 3150000,
-    url: "https://facebook.com/technest/posts/17",
-    trust: 92,
+      "Bundle set for oily and acne prone skin, pads plus gel cleanser. Bundle, set, acne, pores, oily skin.",
+    price: 62000,
+    url: "https://facebook.com/cicahouse/posts/17",
+    trust: 81,
+    note: "Bundle value checks out; seller has one open dispute from last month.",
   },
   {
     id: 900018,
-    title: "Air fryer 5.5L digital",
+    title: "Dr.G Red Blemish Clear Soothing Cream 70ml",
     description:
-      "Digital air fryer with 8 presets, oil-free cooking for family meals. Kitchen, appliance, cooking, home.",
-    price: 115000,
-    url: "https://tiktok.com/@kitchenmm/video/18",
-    trust: 86,
+      "Cica cream for redness, irritation and post-acne repair. Cream, moisturiser, cica, redness, sensitive skin.",
+    price: 49000,
+    url: "https://tiktok.com/@cicahouse/video/18",
+    trust: 92,
+    note: "Verified importer, 128 escrow orders completed, zero refunds.",
   },
 ];
 
@@ -185,10 +203,10 @@ export const demoProducts: ProductRecommendationDto[] = seeds.map((s) => ({
   price: s.price,
   socialPostUrl: s.url,
   trustScore: s.trust,
-  isVerifiedSafe: s.safe ?? s.trust >= 75,
+  isVerifiedSafe: s.trust >= 75,
   fitScore: 60,
   compatibilityInsight: null,
-  explanation: null,
+  explanation: s.note,
 }));
 
 export function getDemoProduct(id: number): ProductRecommendationDto | null {

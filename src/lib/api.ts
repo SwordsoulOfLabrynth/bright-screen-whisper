@@ -292,6 +292,47 @@ export function normaliseStatus(payload: unknown): TransactionStatus | null {
 }
 
 
+// Guardian TrustScore bands — one shared vocabulary for every screen.
+export type TrustTone = "safe" | "caution" | "risk";
+
+export type TrustBand = {
+  score: number;
+  tone: TrustTone;
+  label: string;
+  advice: string;
+};
+
+export function trustBand(score: number | null | undefined): TrustBand {
+  const value = Math.max(0, Math.min(100, Math.round(score ?? 0)));
+  if (value >= 85)
+    return {
+      score: value,
+      tone: "safe",
+      label: "Highly trusted",
+      advice: "Verified seller with a clean escrow history.",
+    };
+  if (value >= 70)
+    return {
+      score: value,
+      tone: "safe",
+      label: "Trusted",
+      advice: "Good history. Escrow still holds your payment until handover.",
+    };
+  if (value >= 50)
+    return {
+      score: value,
+      tone: "caution",
+      label: "Check carefully",
+      advice: "Limited history or mixed signals. Inspect the item before releasing funds.",
+    };
+  return {
+    score: value,
+    tone: "risk",
+    label: "High risk",
+    advice: "Guardian found scam patterns. Avoid paying outside MatchGuard escrow.",
+  };
+}
+
 // The whole app prices in Myanmar Kyat.
 export const CURRENCY = "MMK";
 
