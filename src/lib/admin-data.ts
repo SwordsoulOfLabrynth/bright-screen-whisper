@@ -52,3 +52,22 @@ export const adminSubscribers: AdminSubscriber[] = [
   { id: 6, name: "May Thu", email: "may@example.com", plan: "free", since: "2026-07-21" },
   { id: 8, name: "Kyaw Zin", email: "kyaw@example.com", plan: "plus", since: "2026-08-01" },
 ];
+
+export type AdminCustomer = {
+  id: number;
+  name: string;
+  email: string;
+  orders: number;
+  spend: number;
+  disputes: number;
+  plan: PlanId;
+  status: "ACTIVE" | "REVIEW" | "SUSPENDED";
+};
+
+export const adminCustomers: AdminCustomer[] = [
+  { id: 3, name: "Papa Aung", email: "papa@example.com", orders: 12, spend: 1840, disputes: 0, plan: "plus", status: "ACTIVE" },
+  { id: 4, name: "Win Htut", email: "win@example.com", orders: 27, spend: 9120, disputes: 1, plan: "pro", status: "ACTIVE" },
+  { id: 6, name: "May Thu", email: "may@example.com", orders: 4, spend: 1210, disputes: 0, plan: "free", status: "ACTIVE" },
+  { id: 8, name: "Kyaw Zin", email: "kyaw@example.com", orders: 9, spend: 640, disputes: 3, plan: "plus", status: "REVIEW" },
+  { id: 11, name: "Su Su", email: "susu@example.com", orders: 2, spend: 130, disputes: 4, plan: "free", status: "SUSPENDED" },
+];

@@ -5,10 +5,11 @@ import {
   LayoutDashboard,
   Lock,
   Receipt,
-  ShieldCheck,
+  ShoppingBag,
   Store,
   Users,
 } from "lucide-react";
+import logoAsset from "@/assets/matchguard-logo.png.asset.json";
 import { useEffect, useState, type FormEvent } from "react";
 import { formatMoney, statusLabel } from "@/lib/api";
 import { adminSubscribers, adminTransactions } from "@/lib/admin-data";
@@ -40,7 +41,7 @@ export const Route = createFileRoute("/admin")({
   component: AdminConsole,
 });
 
-type Tab = "overview" | "transactions" | "sellers" | "reports" | "subscriptions";
+type Tab = "overview" | "transactions" | "sellers" | "customers" | "reports" | "subscriptions";
 
 function AdminConsole() {
   const [authed, setAuthed] = useState(false);
@@ -57,8 +58,8 @@ function AdminConsole() {
       <header className="sticky top-0 z-20 border-b border-border bg-background/92 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           <div className="flex items-center gap-2.5">
-            <span className="bg-escrow flex size-9 items-center justify-center rounded-full text-primary-foreground">
-              <ShieldCheck className="size-4.5" />
+            <span className="bg-escrow flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full">
+              <img src={logoAsset.url} alt="MatchGuard" className="size-8 object-contain" />
             </span>
             <div>
               <strong className="block text-base tracking-tight">MatchGuard Admin</strong>
@@ -78,12 +79,13 @@ function AdminConsole() {
       </header>
 
       <main className="mx-auto max-w-6xl px-5 py-6">
-        <nav className="flex flex-wrap gap-2">
+        <nav className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
           {(
             [
               ["overview", "Overview", LayoutDashboard],
               ["transactions", "Transactions", Receipt],
               ["sellers", "Sellers", Store],
+              ["customers", "Customers", ShoppingBag],
               ["reports", "Reports", Flag],
               ["subscriptions", "Subscriptions", Users],
             ] as const
@@ -92,7 +94,7 @@ function AdminConsole() {
               key={id}
               onClick={() => setTab(id)}
               className={cn(
-                "flex items-center gap-2 rounded-xl border px-3.5 py-2.5 text-xs font-bold",
+                "flex shrink-0 items-center gap-2 rounded-xl border px-3.5 py-2.5 text-xs font-bold whitespace-nowrap",
                 tab === id
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-border bg-card text-muted-foreground",
@@ -108,6 +110,7 @@ function AdminConsole() {
           {tab === "overview" && <Overview />}
           {tab === "transactions" && <Transactions />}
           {tab === "sellers" && <Sellers />}
+          {tab === "customers" && <Customers />}
           {tab === "reports" && <Reports />}
           {tab === "subscriptions" && <Subscriptions />}
         </div>
@@ -132,8 +135,11 @@ function AdminGate({ onUnlock }: { onUnlock: () => void }) {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-5">
-      <span className="bg-escrow flex size-12 items-center justify-center rounded-2xl text-primary-foreground">
-        <Lock className="size-6" />
+      <span className="bg-escrow flex size-14 items-center justify-center overflow-hidden rounded-2xl">
+        <img src={logoAsset.url} alt="MatchGuard" className="size-10 object-contain" />
+      </span>
+      <span className="mt-4 flex w-fit items-center gap-1.5 rounded-full border border-border px-2.5 py-1 text-[10px] font-bold text-muted-foreground">
+        <Lock className="size-3" /> Restricted
       </span>
       <h1 className="mt-5 text-3xl font-bold tracking-tight">Admin console</h1>
       <p className="mt-2 text-sm text-muted-foreground">
@@ -266,18 +272,7 @@ function Sellers() {
             <Td>{s.trustScore}</Td>
             <Td>{formatMoney(s.volume)}</Td>
             <Td>
-              <span
-                className={cn(
-                  "rounded-full px-2 py-1 text-[10px] font-bold",
-                  s.status === "ACTIVE"
-                    ? "bg-accent text-accent-foreground"
-                    : s.status === "REVIEW"
-                      ? "bg-warning text-warning-foreground"
-                      : "bg-destructive/10 text-destructive",
-                )}
-              >
-                {s.status}
-              </span>
+              <StatusPill status={s.status} />
             </Td>
             <Td>
               <div className="flex flex-wrap gap-1.5">
@@ -319,6 +314,98 @@ function Sellers() {
         ))}
       </Table>
     </Card>
+  );
+}
+
+function Customers() {
+  const { customers, setCustomerStatus, addReport } = useAdminState();
+
+  return (
+    <div className="space-y-3">
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Stat label="Total customers" value={String(customers.length)} />
+        <Stat
+          label="Suspended"
+          value={String(customers.filter((c) => c.status === "SUSPENDED").length)}
+        />
+        <Stat
+          label="Open disputes"
+          value={String(customers.reduce((s, c) => s + c.disputes, 0))}
+        />
+      </div>
+      <Card title="Customers">
+        <Table head={["Customer", "Email", "Orders", "Spend", "Disputes", "Plan", "Status", "Actions"]}>
+          {customers.map((c) => (
+            <tr key={c.id} className="border-t border-border">
+              <Td>{c.name}</Td>
+              <Td>
+                <span className="text-muted-foreground">{c.email}</span>
+              </Td>
+              <Td>{c.orders}</Td>
+              <Td>{formatMoney(c.spend)}</Td>
+              <Td>{c.disputes}</Td>
+              <Td>{PLANS.find((p) => p.id === c.plan)?.name ?? c.plan}</Td>
+              <Td>
+                <StatusPill status={c.status} />
+              </Td>
+              <Td>
+                <div className="flex flex-wrap gap-1.5">
+                  {c.status !== "SUSPENDED" ? (
+                    <button
+                      onClick={() => {
+                        setCustomerStatus(c.id, "SUSPENDED");
+                        addReport({
+                          subject: `${c.name} banned by admin`,
+                          category: "OTHER",
+                          target: c.name,
+                          severity: "HIGH",
+                          notes: "Buyer account suspended from the customer table.",
+                        });
+                      }}
+                      className="rounded-lg bg-destructive px-2.5 py-1.5 text-[10px] font-bold text-destructive-foreground"
+                    >
+                      Ban
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setCustomerStatus(c.id, "ACTIVE")}
+                      className="rounded-lg bg-success px-2.5 py-1.5 text-[10px] font-bold text-success-foreground"
+                    >
+                      Reinstate
+                    </button>
+                  )}
+                  {c.status === "ACTIVE" && (
+                    <button
+                      onClick={() => setCustomerStatus(c.id, "REVIEW")}
+                      className="rounded-lg border border-border px-2.5 py-1.5 text-[10px] font-bold"
+                    >
+                      Flag
+                    </button>
+                  )}
+                </div>
+              </Td>
+            </tr>
+          ))}
+        </Table>
+      </Card>
+    </div>
+  );
+}
+
+function StatusPill({ status }: { status: "ACTIVE" | "REVIEW" | "SUSPENDED" }) {
+  return (
+    <span
+      className={cn(
+        "inline-block rounded-full px-2 py-1 text-[10px] font-bold",
+        status === "ACTIVE"
+          ? "bg-accent text-accent-foreground"
+          : status === "REVIEW"
+            ? "bg-warning text-warning-foreground"
+            : "bg-destructive/10 text-destructive",
+      )}
+    >
+      {status}
+    </span>
   );
 }
 
