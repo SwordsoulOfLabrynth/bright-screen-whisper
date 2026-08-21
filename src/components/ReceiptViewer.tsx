@@ -45,7 +45,7 @@ export function ReceiptViewer({
         <div className="mt-3 overflow-hidden rounded-2xl border border-border bg-muted">
           {url ? (
             <img
-              src={url}
+              src={proxied(url)}
               alt={`Buyer transfer receipt for order ${orderId}`}
               className="max-h-[60vh] w-full object-contain"
               loading="lazy"
@@ -60,7 +60,7 @@ export function ReceiptViewer({
 
         {url && (
           <a
-            href={url}
+            href={proxied(url)}
             target="_blank"
             rel="noreferrer"
             className="mt-3 flex min-h-10 items-center justify-center gap-2 rounded-xl border border-border text-xs font-bold"
