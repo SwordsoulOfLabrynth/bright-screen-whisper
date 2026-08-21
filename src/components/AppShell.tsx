@@ -63,8 +63,12 @@ export function AppShell({
             to={user?.role === "SELLER" ? "/seller" : "/"}
             className="flex items-center gap-2.5 text-xl font-bold tracking-tight"
           >
-            <span className="bg-escrow flex size-9 items-center justify-center rounded-full text-primary-foreground">
-              <ShieldCheck className="size-4.5" />
+            <span className="bg-escrow flex size-9 items-center justify-center overflow-hidden rounded-full">
+              <img
+                src={logoAsset.url}
+                alt="MatchGuard"
+                className="size-6 object-contain"
+              />
             </span>
             MatchGuard
           </Link>
