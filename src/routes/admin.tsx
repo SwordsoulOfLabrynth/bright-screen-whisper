@@ -206,7 +206,7 @@ function Overview() {
 
         <Card title="Trust review queue">
           <ul className="space-y-2.5">
-            {adminSellers
+            {sellers
               .filter((s) => s.status !== "ACTIVE")
               .map((s) => (
                 <li key={s.id} className="flex items-center justify-between text-sm">
