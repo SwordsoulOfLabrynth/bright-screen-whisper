@@ -30,6 +30,7 @@ function AuthScreen() {
   const [mode, setMode] = useState<"login" | "register">("login");
   const [role, setRole] = useState<Role>("CUSTOMER");
   const [form, setForm] = useState({ name: "", email: "", phone: "", password: "" });
+  const [feeAgreed, setFeeAgreed] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -39,6 +40,10 @@ function AuthScreen() {
 
   async function submit(event: FormEvent) {
     event.preventDefault();
+    if (mode === "register" && role === "SELLER" && !feeAgreed) {
+      setError("Please accept the 5% platform fee to create a seller account.");
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
@@ -53,6 +58,7 @@ function AuthScreen() {
       setBusy(false);
     }
   }
+
 
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-5 py-10">
