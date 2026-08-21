@@ -78,8 +78,17 @@ function OrderTracker() {
   // The QR endpoint is seller-scoped; buyers scan the seller's code instead.
 
 
+  // The seller's QR encodes "<transactionId>:<token>", so a scanned value may
+  // arrive with that prefix (or as a URL). Send only the raw token.
+  const cleanToken = (() => {
+    const raw = qrToken.trim();
+    const last = raw.split(/[/?=&]/).pop() ?? raw;
+    const parts = last.split(":");
+    return (parts.length > 1 ? parts[parts.length - 1] : last).trim();
+  })();
+
   const release = useMutation({
-    mutationFn: () => api.releaseTransaction({ transactionId: orderId, qrToken }),
+    mutationFn: () => api.releaseTransaction({ transactionId: orderId, qrToken: cleanToken }),
     onSuccess: (updated) => {
       saveOrder(updated);
       setMessage("Funds released. Thanks for confirming the handover.");
