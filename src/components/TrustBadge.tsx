@@ -35,7 +35,13 @@ export function TrustBadge({ score, className }: { score: number; className?: st
 }
 
 /** Full TrustScore meter with Guardian advice, used on detail screens. */
-export function TrustMeter({ score, note }: { score: number; note?: string | null }) {
+export function TrustMeter({
+  score,
+  note,
+}: {
+  score: number;
+  note?: string | null | undefined;
+}) {
   const band = trustBand(score);
   const Glyph = Icon[band.tone];
   return (
