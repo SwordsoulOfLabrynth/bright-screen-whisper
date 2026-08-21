@@ -44,6 +44,23 @@ export function SellerOrderCard({
         </p>
       )}
 
+      <button
+        onClick={() => setReceiptOpen(true)}
+        className="mt-3 flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-border text-xs font-bold"
+      >
+        <Receipt className="size-3.5" />
+        {order.screenshotUrl ? "View payment receipt" : "No receipt attached"}
+      </button>
+
+      {receiptOpen && (
+        <ReceiptViewer
+          url={order.screenshotUrl}
+          orderId={order.id}
+          senderPhone={order.senderPhone}
+          onClose={() => setReceiptOpen(false)}
+        />
+      )}
+
       {order.status === "PENDING_VERIFICATION" && (
         <button
           onClick={() => onApprove(order)}
