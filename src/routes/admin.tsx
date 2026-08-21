@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   BadgeDollarSign,
+  Flag,
   LayoutDashboard,
   Lock,
   Receipt,
@@ -10,7 +11,8 @@ import {
 } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 import { formatMoney, statusLabel } from "@/lib/api";
-import { adminSellers, adminSubscribers, adminTransactions } from "@/lib/admin-data";
+import { adminSubscribers, adminTransactions } from "@/lib/admin-data";
+import { useAdminState, type IssueReport } from "@/lib/admin-store";
 import { PLANS, SELLER_FEE_RATE, sellerFee } from "@/lib/plans";
 import { cn } from "@/lib/utils";
 
