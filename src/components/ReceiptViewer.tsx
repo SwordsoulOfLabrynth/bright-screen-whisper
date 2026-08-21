@@ -1,5 +1,10 @@
 import { ImageOff, Receipt, X } from "lucide-react";
 
+function proxied(url: string) {
+  return `/api/public/img?url=${encodeURIComponent(url)}`;
+}
+
+
 export function ReceiptViewer({
   url,
   orderId,
