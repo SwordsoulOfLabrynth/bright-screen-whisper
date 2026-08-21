@@ -23,6 +23,7 @@ import { Route as SellerIndexRouteImport } from './routes/seller.index'
 import { Route as SellerInventoryRouteImport } from './routes/seller.inventory'
 import { Route as SellerOrdersRouteImport } from './routes/seller.orders'
 import { Route as SellerShopRouteImport } from './routes/seller.shop'
+import { Route as ApiPublicImgRouteImport } from './routes/api/public/img'
 import { Route as SellerQrIdRouteImport } from './routes/seller.qr.$id'
 import { Route as ApiPublicMgSplatRouteImport } from './routes/api/public/mg.$'
 
@@ -96,6 +97,11 @@ const SellerShopRoute = SellerShopRouteImport.update({
   path: '/seller/shop',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicImgRoute = ApiPublicImgRouteImport.update({
+  id: '/api/public/img',
+  path: '/api/public/img',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SellerQrIdRoute = SellerQrIdRouteImport.update({
   id: '/seller/qr/$id',
   path: '/seller/qr/$id',
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/seller/shop': typeof SellerShopRoute
   '/orders/': typeof OrdersIndexRoute
   '/seller/': typeof SellerIndexRoute
+  '/api/public/img': typeof ApiPublicImgRoute
   '/seller/qr/$id': typeof SellerQrIdRoute
   '/api/public/mg/$': typeof ApiPublicMgSplatRoute
 }
@@ -140,6 +147,7 @@ export interface FileRoutesByTo {
   '/seller/shop': typeof SellerShopRoute
   '/orders': typeof OrdersIndexRoute
   '/seller': typeof SellerIndexRoute
+  '/api/public/img': typeof ApiPublicImgRoute
   '/seller/qr/$id': typeof SellerQrIdRoute
   '/api/public/mg/$': typeof ApiPublicMgSplatRoute
 }
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/seller/shop': typeof SellerShopRoute
   '/orders/': typeof OrdersIndexRoute
   '/seller/': typeof SellerIndexRoute
+  '/api/public/img': typeof ApiPublicImgRoute
   '/seller/qr/$id': typeof SellerQrIdRoute
   '/api/public/mg/$': typeof ApiPublicMgSplatRoute
 }
@@ -179,6 +188,7 @@ export interface FileRouteTypes {
     | '/seller/shop'
     | '/orders/'
     | '/seller/'
+    | '/api/public/img'
     | '/seller/qr/$id'
     | '/api/public/mg/$'
   fileRoutesByTo: FileRoutesByTo
@@ -197,6 +207,7 @@ export interface FileRouteTypes {
     | '/seller/shop'
     | '/orders'
     | '/seller'
+    | '/api/public/img'
     | '/seller/qr/$id'
     | '/api/public/mg/$'
   id:
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '/seller/shop'
     | '/orders/'
     | '/seller/'
+    | '/api/public/img'
     | '/seller/qr/$id'
     | '/api/public/mg/$'
   fileRoutesById: FileRoutesById
@@ -234,6 +246,7 @@ export interface RootRouteChildren {
   SellerShopRoute: typeof SellerShopRoute
   OrdersIndexRoute: typeof OrdersIndexRoute
   SellerIndexRoute: typeof SellerIndexRoute
+  ApiPublicImgRoute: typeof ApiPublicImgRoute
   SellerQrIdRoute: typeof SellerQrIdRoute
   ApiPublicMgSplatRoute: typeof ApiPublicMgSplatRoute
 }
@@ -338,6 +351,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SellerShopRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/img': {
+      id: '/api/public/img'
+      path: '/api/public/img'
+      fullPath: '/api/public/img'
+      preLoaderRoute: typeof ApiPublicImgRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/seller/qr/$id': {
       id: '/seller/qr/$id'
       path: '/seller/qr/$id'
@@ -370,6 +390,7 @@ const rootRouteChildren: RootRouteChildren = {
   SellerShopRoute: SellerShopRoute,
   OrdersIndexRoute: OrdersIndexRoute,
   SellerIndexRoute: SellerIndexRoute,
+  ApiPublicImgRoute: ApiPublicImgRoute,
   SellerQrIdRoute: SellerQrIdRoute,
   ApiPublicMgSplatRoute: ApiPublicMgSplatRoute,
 }
