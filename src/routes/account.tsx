@@ -1,7 +1,9 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { LogOut, Mail, ShieldCheck, User } from "lucide-react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ChevronRight, LogOut, Mail, ShieldCheck, Sparkles, User } from "lucide-react";
+import { useEffect, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { useAuth } from "@/lib/auth";
+import { getPlan, PLANS, type PlanId } from "@/lib/plans";
 
 export const Route = createFileRoute("/account")({
   head: () => ({

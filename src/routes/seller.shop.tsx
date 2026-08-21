@@ -65,6 +65,14 @@ function SellerShop() {
         </p>
       </div>
 
+      <div className="mt-3 flex gap-2.5 rounded-2xl bg-accent p-4 text-xs leading-snug text-accent-foreground">
+        <Percent className="size-4 shrink-0" />
+        <span>
+          MatchGuard deducts a 5% platform fee from every completed transaction. Released this
+          period: {formatMoney(released)} gross · {formatMoney(sellerNet(released))} net after fees.
+        </span>
+      </div>
+
       <button
         onClick={() => {
           logout();
