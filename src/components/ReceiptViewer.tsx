@@ -58,9 +58,10 @@ export function ReceiptViewer({
             href={url}
             target="_blank"
             rel="noreferrer"
-            className="mt-3 flex min-h-10 items-center justify-center rounded-xl border border-border text-xs font-bold"
+            className="mt-3 flex min-h-10 items-center justify-center gap-2 rounded-xl border border-border text-xs font-bold"
           >
-            Open full size
+            <Receipt className="size-3.5" />
+            View receipt
           </a>
         )}
       </div>
