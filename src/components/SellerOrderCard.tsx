@@ -1,4 +1,7 @@
 import { Link } from "@tanstack/react-router";
+import { Receipt } from "lucide-react";
+import { useState } from "react";
+import { ReceiptViewer } from "@/components/ReceiptViewer";
 import { formatMoney, statusLabel, type TransactionResponseDto } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +14,7 @@ export function SellerOrderCard({
   onApprove: (order: TransactionResponseDto) => void;
   approving: boolean;
 }) {
+  const [receiptOpen, setReceiptOpen] = useState(false);
   return (
     <article className="rounded-2xl border border-border bg-card p-3.5">
       <div className="flex items-start justify-between gap-2">
@@ -38,6 +42,23 @@ export function SellerOrderCard({
         <p className="mt-2 rounded-xl bg-muted px-2.5 py-2 text-[11px] leading-snug text-muted-foreground">
           Guardian: {order.aiVerificationNotes}
         </p>
+      )}
+
+      <button
+        onClick={() => setReceiptOpen(true)}
+        className="mt-3 flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-border text-xs font-bold"
+      >
+        <Receipt className="size-3.5" />
+        {order.screenshotUrl ? "View payment receipt" : "No receipt attached"}
+      </button>
+
+      {receiptOpen && (
+        <ReceiptViewer
+          url={order.screenshotUrl}
+          orderId={order.id}
+          senderPhone={order.senderPhone}
+          onClose={() => setReceiptOpen(false)}
+        />
       )}
 
       {order.status === "PENDING_VERIFICATION" && (
