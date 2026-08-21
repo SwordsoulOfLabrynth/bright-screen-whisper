@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { LogOut, Mail, Store, Wallet } from "lucide-react";
+import { LogOut, Mail, Percent, Store, Wallet } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { api, formatMoney } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { sellerNet } from "@/lib/plans";
 
 export const Route = createFileRoute("/seller/shop")({
   head: () => ({
