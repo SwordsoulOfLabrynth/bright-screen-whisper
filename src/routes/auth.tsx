@@ -138,6 +138,32 @@ function AuthScreen() {
           onChange={(v) => setForm((f) => ({ ...f, password: v }))}
         />
 
+        {mode === "register" && role === "SELLER" && (
+          <div className="rounded-2xl border border-border bg-card p-4">
+            <p className="flex items-center gap-2 text-sm font-bold">
+              <Percent className="size-4 text-brand-teal" /> 5% platform fee
+            </p>
+            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+              MatchGuard deducts a 5% service fee from every completed transaction before your
+              escrow payout is released. Example: a $100 sale pays out $95.
+            </p>
+            <label className="mt-3 flex cursor-pointer items-start gap-2.5 text-xs leading-snug">
+              <input
+                type="checkbox"
+                checked={feeAgreed}
+                onChange={(e) => setFeeAgreed(e.target.checked)}
+                className="mt-0.5 size-4 shrink-0 accent-primary"
+              />
+              <span>
+                I understand and agree that MatchGuard charges 5% of every transaction I complete as
+                a seller.
+              </span>
+            </label>
+          </div>
+        )}
+
+
+
         {error && (
           <p className="rounded-xl bg-destructive/10 px-3 py-2.5 text-xs text-destructive">
             {error}
