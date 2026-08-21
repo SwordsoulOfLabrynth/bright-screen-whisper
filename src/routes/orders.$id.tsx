@@ -84,7 +84,7 @@ function OrderTracker() {
     const raw = qrToken.trim();
     const last = raw.split(/[/?=&]/).pop() ?? raw;
     const parts = last.split(":");
-    return (parts.length > 1 ? parts[parts.length - 1] : last).trim();
+    return (parts[parts.length - 1] ?? last).trim();
   })();
 
   const release = useMutation({
