@@ -186,7 +186,7 @@ function OrderTracker() {
               />
               <button
                 onClick={() => release.mutate()}
-                disabled={release.isPending || !qrToken}
+                disabled={release.isPending || !cleanToken}
                 className="mt-3 min-h-11 w-full rounded-xl bg-primary text-sm font-bold text-primary-foreground disabled:opacity-60"
               >
                 {release.isPending ? "Releasing…" : "Confirm handover & release"}
