@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ShieldCheck } from "lucide-react";
+import { Percent, ShieldCheck } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 import { useAuth } from "@/lib/auth";
 import type { Role } from "@/lib/api";
