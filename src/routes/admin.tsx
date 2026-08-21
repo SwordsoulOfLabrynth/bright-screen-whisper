@@ -163,6 +163,7 @@ function AdminGate({ onUnlock }: { onUnlock: () => void }) {
 }
 
 function Overview() {
+  const { sellers } = useAdminState();
   const escrow = adminTransactions
     .filter((t) => t.status === "ESCROW_LOCKED")
     .reduce((s, t) => s + t.amount, 0);
