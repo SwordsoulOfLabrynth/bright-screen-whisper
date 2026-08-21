@@ -248,10 +248,14 @@ function Transactions() {
 }
 
 function Sellers() {
+  const { sellers, setSellerStatus, addReport } = useAdminState();
+
   return (
     <Card title="Sellers">
-      <Table head={["Seller", "Social shop", "Listings", "TrustScore", "Volume", "Status"]}>
-        {adminSellers.map((s) => (
+      <Table
+        head={["Seller", "Social shop", "Listings", "TrustScore", "Volume", "Status", "Actions"]}
+      >
+        {sellers.map((s) => (
           <tr key={s.id} className="border-t border-border">
             <Td>{s.name}</Td>
             <Td>{s.shop}</Td>
@@ -264,16 +268,178 @@ function Sellers() {
                   "rounded-full px-2 py-1 text-[10px] font-bold",
                   s.status === "ACTIVE"
                     ? "bg-accent text-accent-foreground"
-                    : "bg-destructive/10 text-destructive",
+                    : s.status === "REVIEW"
+                      ? "bg-warning text-warning-foreground"
+                      : "bg-destructive/10 text-destructive",
                 )}
               >
                 {s.status}
               </span>
             </Td>
+            <Td>
+              <div className="flex flex-wrap gap-1.5">
+                {s.status !== "SUSPENDED" ? (
+                  <button
+                    onClick={() => {
+                      setSellerStatus(s.id, "SUSPENDED");
+                      addReport({
+                        subject: `${s.name} banned by admin`,
+                        category: "SCAM",
+                        target: s.name,
+                        severity: "HIGH",
+                        notes: "Account suspended from the seller table.",
+                      });
+                    }}
+                    className="rounded-lg bg-destructive px-2.5 py-1.5 text-[10px] font-bold text-destructive-foreground"
+                  >
+                    Ban
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setSellerStatus(s.id, "ACTIVE")}
+                    className="rounded-lg bg-success px-2.5 py-1.5 text-[10px] font-bold text-success-foreground"
+                  >
+                    Reinstate
+                  </button>
+                )}
+                {s.status !== "REVIEW" && s.status !== "SUSPENDED" && (
+                  <button
+                    onClick={() => setSellerStatus(s.id, "REVIEW")}
+                    className="rounded-lg border border-border px-2.5 py-1.5 text-[10px] font-bold"
+                  >
+                    Flag for review
+                  </button>
+                )}
+              </div>
+            </Td>
           </tr>
         ))}
       </Table>
     </Card>
+  );
+}
+
+function Reports() {
+  const { reports, addReport, setReportStatus, deleteReport, sellers } = useAdminState();
+  const [subject, setSubject] = useState("");
+  const [target, setTarget] = useState("");
+  const [category, setCategory] = useState<IssueReport["category"]>("SCAM");
+  const [severity, setSeverity] = useState<IssueReport["severity"]>("MEDIUM");
+  const [notes, setNotes] = useState("");
+
+  function submit(event: FormEvent) {
+    event.preventDefault();
+    if (!subject.trim()) return;
+    addReport({ subject: subject.trim(), target: target.trim() || "Platform", category, severity, notes: notes.trim() });
+    setSubject("");
+    setTarget("");
+    setNotes("");
+  }
+
+  const open = reports.filter((r) => r.status === "OPEN");
+
+  return (
+    <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <Card title={`Issue reports (${open.length} open)`}>
+        <ul className="space-y-2.5">
+          {reports.length === 0 && (
+            <li className="py-6 text-center text-xs text-muted-foreground">No reports filed.</li>
+          )}
+          {reports.map((r) => (
+            <li key={r.id} className="rounded-xl border border-border p-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <strong className="text-sm">{r.subject}</strong>
+                <span
+                  className={cn(
+                    "rounded-full px-2 py-1 text-[10px] font-bold",
+                    r.status === "OPEN"
+                      ? "bg-warning text-warning-foreground"
+                      : "bg-success text-success-foreground",
+                  )}
+                >
+                  {r.status}
+                </span>
+              </div>
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                {r.category} · {r.severity} · {r.target} · {r.createdAt}
+              </p>
+              {r.notes && <p className="mt-1.5 text-xs">{r.notes}</p>}
+              <div className="mt-2.5 flex gap-2">
+                <button
+                  onClick={() => setReportStatus(r.id, r.status === "OPEN" ? "RESOLVED" : "OPEN")}
+                  className="rounded-lg border border-border px-2.5 py-1.5 text-[10px] font-bold"
+                >
+                  {r.status === "OPEN" ? "Mark resolved" : "Reopen"}
+                </button>
+                <button
+                  onClick={() => deleteReport(r.id)}
+                  className="rounded-lg px-2.5 py-1.5 text-[10px] font-bold text-destructive"
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </Card>
+
+      <Card title="File a new report">
+        <form onSubmit={submit} className="space-y-2.5">
+          <input
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            placeholder="Subject"
+            className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-ring"
+          />
+          <input
+            list="admin-report-targets"
+            value={target}
+            onChange={(e) => setTarget(e.target.value)}
+            placeholder="Target (seller, order…)"
+            className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-ring"
+          />
+          <datalist id="admin-report-targets">
+            {sellers.map((s) => (
+              <option key={s.id} value={s.name} />
+            ))}
+          </datalist>
+          <div className="grid grid-cols-2 gap-2.5">
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value as IssueReport["category"])}
+              className="rounded-xl border border-border bg-background px-3 py-2.5 text-sm"
+            >
+              <option value="SCAM">Scam</option>
+              <option value="PAYMENT">Payment</option>
+              <option value="DELIVERY">Delivery</option>
+              <option value="OTHER">Other</option>
+            </select>
+            <select
+              value={severity}
+              onChange={(e) => setSeverity(e.target.value as IssueReport["severity"])}
+              className="rounded-xl border border-border bg-background px-3 py-2.5 text-sm"
+            >
+              <option value="LOW">Low</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="HIGH">High</option>
+            </select>
+          </div>
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            rows={3}
+            placeholder="Notes"
+            className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-ring"
+          />
+          <button
+            type="submit"
+            className="w-full rounded-xl bg-primary py-3 text-sm font-bold text-primary-foreground"
+          >
+            File report
+          </button>
+        </form>
+      </Card>
+    </div>
   );
 }
 
