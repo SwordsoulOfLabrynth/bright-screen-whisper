@@ -1,4 +1,7 @@
 import { Link } from "@tanstack/react-router";
+import { Receipt } from "lucide-react";
+import { useState } from "react";
+import { ReceiptViewer } from "@/components/ReceiptViewer";
 import { formatMoney, statusLabel, type TransactionResponseDto } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +14,7 @@ export function SellerOrderCard({
   onApprove: (order: TransactionResponseDto) => void;
   approving: boolean;
 }) {
+  const [receiptOpen, setReceiptOpen] = useState(false);
   return (
     <article className="rounded-2xl border border-border bg-card p-3.5">
       <div className="flex items-start justify-between gap-2">
