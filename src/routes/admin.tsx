@@ -84,6 +84,7 @@ function AdminConsole() {
               ["overview", "Overview", LayoutDashboard],
               ["transactions", "Transactions", Receipt],
               ["sellers", "Sellers", Store],
+              ["reports", "Reports", Flag],
               ["subscriptions", "Subscriptions", Users],
             ] as const
           ).map(([id, label, Icon]) => (
