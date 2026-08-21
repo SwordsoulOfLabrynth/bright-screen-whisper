@@ -44,7 +44,9 @@ function tokenize(text: string) {
     .toLowerCase()
     .replace(/[^a-z0-9.,\s]/g, " ")
     .split(/\s+/)
-    .filter((t) => t.length > 1 && !STOP_WORDS.has(t));
+    .filter((t) => t.length > 1 && !STOP_WORDS.has(t))
+    // Prices are matched through the budget filter, not as keywords.
+    .filter((t) => !/^[\d.,]+(k|mmk|ks|lakh)?$/.test(t));
 }
 
 function budgetOf(query: string) {
