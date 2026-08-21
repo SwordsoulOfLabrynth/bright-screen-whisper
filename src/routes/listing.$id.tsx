@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ExternalLink, ShieldAlert, ShieldCheck, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { api, formatMoney, type ProductRecommendationDto } from "@/lib/api";
+import { api, formatMoney, trustBand, type ProductRecommendationDto } from "@/lib/api";
+import { TrustMeter } from "@/components/TrustBadge";
 import { cacheProducts, getCachedProduct } from "@/lib/local-store";
 
 export const Route = createFileRoute("/listing/$id")({
@@ -74,14 +75,18 @@ function ListingDetail() {
             </div>
           </div>
 
-          <div className="mt-4 rounded-2xl border border-border bg-card p-4">
+          <div className="mt-3">
+            <TrustMeter score={product.trustScore} note={product.explanation} />
+          </div>
+
+          <div className="mt-3 rounded-2xl border border-border bg-card p-4">
             <h2 className="text-sm font-semibold">Seller description</h2>
             <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
               {product.description}
             </p>
 
             <div className="mt-4 grid grid-cols-2 border-t border-border">
-              <Fact label="Trust score" value={`${product.trustScore}/100`} />
+              <Fact label="Trust score" value={`${product.trustScore}/100 · ${trustBand(product.trustScore).label}`} />
               <Fact
                 label="Guardian check"
                 value={product.isVerifiedSafe ? "Verified safe" : "Needs caution"}

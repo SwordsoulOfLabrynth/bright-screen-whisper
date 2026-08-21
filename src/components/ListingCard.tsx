@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { ShieldAlert, ShieldCheck } from "lucide-react";
 import { formatMoney, type ProductRecommendationDto } from "@/lib/api";
+import { TrustBadge } from "@/components/TrustBadge";
 
 export function ListingCard({ product }: { product: ProductRecommendationDto }) {
   return (
@@ -20,14 +20,7 @@ export function ListingCard({ product }: { product: ProductRecommendationDto }) 
         {product.compatibilityInsight || product.description}
       </p>
       <div className="mt-3 flex items-center justify-between gap-2">
-        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-muted-foreground">
-          {product.isVerifiedSafe ? (
-            <ShieldCheck className="size-3.5 text-brand-teal" />
-          ) : (
-            <ShieldAlert className="size-3.5 text-destructive" />
-          )}
-          Trust {product.trustScore}
-        </span>
+        <TrustBadge score={product.trustScore} />
         <span className="rounded-full bg-success px-2 py-1 text-[11px] font-bold text-success-foreground">
           {product.fitScore}% match
         </span>

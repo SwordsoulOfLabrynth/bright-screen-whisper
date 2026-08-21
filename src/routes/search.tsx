@@ -28,10 +28,10 @@ export const Route = createFileRoute("/search")({
 });
 
 const chips = [
-  "Phone under 1,000,000 MMK",
-  "Skincare set for oily skin",
-  "Camera for indoor interviews",
-  "Running shoes under 250,000 MMK",
+  "Serum for oily acne skin",
+  "Sunscreen under 30,000 MMK",
+  "Gentle cleanser for sensitive skin",
+  "Hydrating toner for dry skin",
 ];
 
 const STOP_WORDS = new Set([
@@ -74,7 +74,11 @@ function rankResults(items: ProductRecommendationDto[], query: string) {
       : (item.fitScore ?? 50);
     return {
       ...item,
-      fitScore: Math.max(5, Math.min(99, fit + (priceOk ? 0 : -40) + (item.isVerifiedSafe ? 5 : 0))),
+      // Trust nudges the ranking so risky posts never sit at the top.
+      fitScore: Math.max(
+        5,
+        Math.min(99, fit + (priceOk ? 0 : -40) + Math.round((item.trustScore - 70) / 5)),
+      ),
       compatibilityInsight:
         hits > 0
           ? `Matches ${hits} of ${tokens.length} things you asked for${priceOk ? "" : " but is above your budget"}.`
@@ -87,7 +91,9 @@ function rankResults(items: ProductRecommendationDto[], query: string) {
   // Only genuinely relevant listings are shown — never the whole catalogue.
   const strict = scored.filter((s) => s._hits > 0 && s._priceOk);
   const loose = scored.filter((s) => s._hits > 0);
-  const list = (strict.length ? strict : loose).sort((a, b) => b.fitScore - a.fitScore);
+  const list = (strict.length ? strict : loose).sort(
+    (a, b) => b.fitScore - a.fitScore || b.trustScore - a.trustScore,
+  );
   return list.map(({ _hits, _priceOk, ...rest }) => rest) as ProductRecommendationDto[];
 }
 
@@ -133,7 +139,7 @@ function SearchScreen() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Gaming laptop under 3,000,000 MMK with upgrade room"
+          placeholder="Niacinamide serum for oily skin under 40,000 MMK"
           className="min-w-0 flex-1 bg-transparent text-[13px] outline-none"
         />
         <button
