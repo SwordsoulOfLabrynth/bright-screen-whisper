@@ -40,7 +40,7 @@ export const Route = createFileRoute("/admin")({
   component: AdminConsole,
 });
 
-type Tab = "overview" | "transactions" | "sellers" | "subscriptions";
+type Tab = "overview" | "transactions" | "sellers" | "reports" | "subscriptions";
 
 function AdminConsole() {
   const [authed, setAuthed] = useState(false);
