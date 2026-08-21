@@ -108,6 +108,7 @@ function AdminConsole() {
           {tab === "overview" && <Overview />}
           {tab === "transactions" && <Transactions />}
           {tab === "sellers" && <Sellers />}
+          {tab === "reports" && <Reports />}
           {tab === "subscriptions" && <Subscriptions />}
         </div>
       </main>
