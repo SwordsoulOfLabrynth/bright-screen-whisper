@@ -1,8 +1,9 @@
 // Frontend-only mutable admin state (moderation actions + issue reports).
 import { useCallback, useEffect, useState } from "react";
-import { adminSellers, type AdminSeller } from "@/lib/admin-data";
+import { adminCustomers, adminSellers, type AdminCustomer, type AdminSeller } from "@/lib/admin-data";
 
 export type SellerStatus = AdminSeller["status"];
+export type CustomerStatus = AdminCustomer["status"];
 
 export type IssueReport = {
   id: number;
@@ -17,6 +18,7 @@ export type IssueReport = {
 
 type AdminState = {
   sellerStatus: Record<number, SellerStatus>;
+  customerStatus: Record<number, CustomerStatus>;
   reports: IssueReport[];
 };
 
@@ -45,7 +47,7 @@ const seedReports: IssueReport[] = [
   },
 ];
 
-const empty: AdminState = { sellerStatus: {}, reports: seedReports };
+const empty: AdminState = { sellerStatus: {}, customerStatus: {}, reports: seedReports };
 
 function read(): AdminState {
   if (typeof window === "undefined") return empty;
@@ -79,6 +81,12 @@ export function useAdminState() {
   const setSellerStatus = useCallback((id: number, status: SellerStatus) => {
     const next = read();
     next.sellerStatus = { ...next.sellerStatus, [id]: status };
+    write(next);
+  }, []);
+
+  const setCustomerStatus = useCallback((id: number, status: CustomerStatus) => {
+    const next = read();
+    next.customerStatus = { ...next.customerStatus, [id]: status };
     write(next);
   }, []);
 
@@ -116,5 +124,10 @@ export function useAdminState() {
     status: state.sellerStatus[s.id] ?? s.status,
   }));
 
-  return { sellers, reports: state.reports, setSellerStatus, addReport, setReportStatus, deleteReport };
+  const customers = adminCustomers.map((c) => ({
+    ...c,
+    status: state.customerStatus[c.id] ?? c.status,
+  }));
+
+  return { sellers, customers, setCustomerStatus, reports: state.reports, setSellerStatus, addReport, setReportStatus, deleteReport };
 }
