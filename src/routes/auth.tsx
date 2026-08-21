@@ -145,7 +145,7 @@ function AuthScreen() {
             </p>
             <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
               MatchGuard deducts a 5% service fee from every completed transaction before your
-              escrow payout is released. Example: a $100 sale pays out $95.
+              escrow payout is released. Example: a 100,000 MMK sale pays out 95,000 MMK.
             </p>
             <label className="mt-3 flex cursor-pointer items-start gap-2.5 text-xs leading-snug">
               <input

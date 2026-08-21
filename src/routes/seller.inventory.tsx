@@ -90,7 +90,7 @@ function SellerInventory() {
             textarea
           />
           <Field
-            label="Price (USD)"
+            label="Price (MMK)"
             value={form.price}
             onChange={(v) => setForm((f) => ({ ...f, price: v }))}
             type="number"

@@ -292,7 +292,10 @@ export function normaliseStatus(payload: unknown): TransactionStatus | null {
 }
 
 
+// The whole app prices in Myanmar Kyat.
+export const CURRENCY = "MMK";
+
 export function formatMoney(amount: number | null | undefined) {
-  if (amount == null) return "$0";
-  return `$${amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+  if (amount == null) return "0 MMK";
+  return `${Math.round(amount).toLocaleString("en-US")} MMK`;
 }

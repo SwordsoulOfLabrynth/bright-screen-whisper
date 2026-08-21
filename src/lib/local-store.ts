@@ -1,4 +1,5 @@
 import type { ProductRecommendationDto, TransactionResponseDto } from "@/lib/api";
+import { getDemoProduct } from "@/lib/demo-catalog";
 
 // The backend exposes no "product by id" or "buyer transactions" endpoint yet,
 // so the app keeps a small client-side cache of what the user has already seen.
@@ -29,7 +30,7 @@ export function cacheProducts(products: ProductRecommendationDto[]) {
 
 export function getCachedProduct(id: number): ProductRecommendationDto | null {
   const map = read<Record<string, ProductRecommendationDto>>(PRODUCT_KEY, {});
-  return map[String(id)] ?? null;
+  return map[String(id)] ?? getDemoProduct(id);
 }
 
 export function saveOrder(order: TransactionResponseDto) {
