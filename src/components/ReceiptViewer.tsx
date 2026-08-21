@@ -1,4 +1,4 @@
-import { ImageOff, X } from "lucide-react";
+import { ImageOff, Receipt, X } from "lucide-react";
 
 export function ReceiptViewer({
   url,
