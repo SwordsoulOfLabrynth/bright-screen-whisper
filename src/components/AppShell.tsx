@@ -67,7 +67,7 @@ export function AppShell({
               <img
                 src={logoAsset.url}
                 alt="MatchGuard"
-                className="size-6 object-contain"
+                className="size-8 object-contain"
               />
             </span>
             MatchGuard
