@@ -5,6 +5,7 @@ import { useState, type FormEvent } from "react";
 import { AppShell } from "@/components/AppShell";
 import { ListingCard } from "@/components/ListingCard";
 import { api, type ProductRecommendationDto } from "@/lib/api";
+import { demoProducts } from "@/lib/demo-catalog";
 import { cacheProducts } from "@/lib/local-store";
 
 export const Route = createFileRoute("/search")({
@@ -27,9 +28,10 @@ export const Route = createFileRoute("/search")({
 });
 
 const chips = [
-  "1440p gaming PC under $1,300",
-  "Light laptop for design school",
+  "Phone under 1,000,000 MMK",
+  "Skincare set for oily skin",
   "Camera for indoor interviews",
+  "Running shoes under 250,000 MMK",
 ];
 
 const STOP_WORDS = new Set([
@@ -40,20 +42,28 @@ const STOP_WORDS = new Set([
 function tokenize(text: string) {
   return text
     .toLowerCase()
-    .replace(/[^a-z0-9$.,\s]/g, " ")
+    .replace(/[^a-z0-9.,\s]/g, " ")
     .split(/\s+/)
-    .filter((t) => t.length > 1 && !STOP_WORDS.has(t));
+    .filter((t) => t.length > 1 && !STOP_WORDS.has(t))
+    // Prices are matched through the budget filter, not as keywords.
+    .filter((t) => !/^[\d.,]+(k|mmk|ks|lakh)?$/.test(t));
 }
 
 function budgetOf(query: string) {
-  const match = query.replace(/,/g, "").match(/(?:under|below|max|less than)?\s*\$?\s*(\d{2,7})/i);
-  return match ? Number(match[1]) : null;
+  const cleaned = query.replace(/,/g, "");
+  const match = cleaned.match(/(?:under|below|max|less than)?\s*(\d{2,9})\s*(k|lakh|mmk|ks)?/i);
+  if (!match) return null;
+  const value = Number(match[1]);
+  const unit = (match[2] ?? "").toLowerCase();
+  if (unit === "k") return value * 1000;
+  if (unit === "lakh") return value * 100000;
+  return value;
 }
 
 /** The backend returns the whole catalogue for any query, so ranking happens here. */
 function rankResults(items: ProductRecommendationDto[], query: string) {
   const tokens = tokenize(query);
-  const budget = /under|below|max|less than|\$/i.test(query) ? budgetOf(query) : null;
+  const budget = /under|below|max|less than|mmk|ks\b/i.test(query) ? budgetOf(query) : null;
 
   const scored = items.map((item) => {
     const haystack = `${item.title} ${item.description}`.toLowerCase();
@@ -86,7 +96,18 @@ function SearchScreen() {
   const [results, setResults] = useState<ProductRecommendationDto[] | null>(null);
 
   const search = useMutation({
-    mutationFn: async (q: string) => rankResults(await api.searchProducts(q), q),
+    mutationFn: async (q: string) => {
+      // Backend catalogue plus the demo showcase listings, de-duplicated by id.
+      let live: ProductRecommendationDto[] = [];
+      try {
+        live = await api.searchProducts(q);
+      } catch {
+        live = [];
+      }
+      const map = new Map<number, ProductRecommendationDto>();
+      for (const item of [...live, ...demoProducts]) map.set(item.productId, item);
+      return rankResults([...map.values()], q);
+    },
     onSuccess: (data) => {
       cacheProducts(data);
       setResults(data);
@@ -112,7 +133,7 @@ function SearchScreen() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Gaming PC under $1,300 with upgrade room"
+          placeholder="Gaming laptop under 3,000,000 MMK with upgrade room"
           className="min-w-0 flex-1 bg-transparent text-[13px] outline-none"
         />
         <button

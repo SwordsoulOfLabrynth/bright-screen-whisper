@@ -83,7 +83,7 @@ function PlansScreen() {
                 </div>
                 <div className="text-right">
                   <strong className="block text-xl tracking-tight">
-                    {plan.price === 0 ? "Free" : `$${plan.price.toFixed(2)}`}
+                    {plan.price === 0 ? "Free" : `${plan.price.toLocaleString("en-US")} MMK`}
                   </strong>
                   {plan.price > 0 && (
                     <span className="text-[10px] text-muted-foreground">per month</span>

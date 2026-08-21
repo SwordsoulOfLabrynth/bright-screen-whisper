@@ -29,7 +29,7 @@ export const PLANS: Plan[] = [
   {
     id: "plus",
     name: "Guardian Plus",
-    price: 4.99,
+    price: 9900,
     tagline: "For regular social shoppers.",
     searches: "200 AI searches / month",
     features: [
@@ -43,7 +43,7 @@ export const PLANS: Plan[] = [
   {
     id: "pro",
     name: "Guardian Pro",
-    price: 12.99,
+    price: 24900,
     tagline: "Power buyers and resellers.",
     searches: "Unlimited AI searches",
     features: [

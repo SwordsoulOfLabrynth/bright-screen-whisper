@@ -32,18 +32,18 @@ export type AdminSubscriber = {
 };
 
 export const adminTransactions: AdminTransaction[] = [
-  { id: 1042, product: "Gaming PC RTX 4070", buyer: "Win Htut", seller: "TechNest", amount: 1530, status: "ESCROW_LOCKED", createdAt: "2026-08-20" },
-  { id: 1041, product: "Sun Cream SPF50", buyer: "Papa Aung", seller: "GlowLab", amount: 20.4, status: "PENDING_VERIFICATION", createdAt: "2026-08-20" },
-  { id: 1038, product: "iPhone 14 Pro", buyer: "May Thu", seller: "MobileHub", amount: 890, status: "COMPLETED", createdAt: "2026-08-19" },
-  { id: 1035, product: "Office Chair Ergo", buyer: "Kyaw Zin", seller: "HomeFit", amount: 210, status: "COMPLETED", createdAt: "2026-08-18" },
-  { id: 1030, product: "Fake AirPods listing", buyer: "Su Su", seller: "QuickDeals", amount: 65, status: "CANCELLED_AND_REFUNDED", createdAt: "2026-08-17" },
+  { id: 1042, product: "Gaming PC RTX 4070", buyer: "Win Htut", seller: "TechNest", amount: 3150000, status: "ESCROW_LOCKED", createdAt: "2026-08-20" },
+  { id: 1041, product: "Sun Cream SPF50", buyer: "Papa Aung", seller: "GlowLab", amount: 42000, status: "PENDING_VERIFICATION", createdAt: "2026-08-20" },
+  { id: 1038, product: "iPhone 14 Pro", buyer: "May Thu", seller: "MobileHub", amount: 1250000, status: "COMPLETED", createdAt: "2026-08-19" },
+  { id: 1035, product: "Office Chair Ergo", buyer: "Kyaw Zin", seller: "HomeFit", amount: 265000, status: "COMPLETED", createdAt: "2026-08-18" },
+  { id: 1030, product: "Fake AirPods listing", buyer: "Su Su", seller: "QuickDeals", amount: 88000, status: "CANCELLED_AND_REFUNDED", createdAt: "2026-08-17" },
 ];
 
 export const adminSellers: AdminSeller[] = [
-  { id: 2, name: "TechNest", shop: "facebook.com/technest", listings: 24, trustScore: 92, volume: 12450, status: "ACTIVE" },
-  { id: 5, name: "GlowLab", shop: "instagram.com/glowlab", listings: 12, trustScore: 88, volume: 3120, status: "ACTIVE" },
-  { id: 7, name: "MobileHub", shop: "facebook.com/mobilehub", listings: 31, trustScore: 76, volume: 20180, status: "REVIEW" },
-  { id: 9, name: "QuickDeals", shop: "telegram.me/quickdeals", listings: 8, trustScore: 41, volume: 640, status: "SUSPENDED" },
+  { id: 2, name: "TechNest", shop: "facebook.com/technest", listings: 24, trustScore: 92, volume: 24850000, status: "ACTIVE" },
+  { id: 5, name: "GlowLab", shop: "instagram.com/glowlab", listings: 12, trustScore: 88, volume: 6240000, status: "ACTIVE" },
+  { id: 7, name: "MobileHub", shop: "facebook.com/mobilehub", listings: 31, trustScore: 76, volume: 40360000, status: "REVIEW" },
+  { id: 9, name: "QuickDeals", shop: "telegram.me/quickdeals", listings: 8, trustScore: 41, volume: 1280000, status: "SUSPENDED" },
 ];
 
 export const adminSubscribers: AdminSubscriber[] = [
@@ -65,9 +65,9 @@ export type AdminCustomer = {
 };
 
 export const adminCustomers: AdminCustomer[] = [
-  { id: 3, name: "Papa Aung", email: "papa@example.com", orders: 12, spend: 1840, disputes: 0, plan: "plus", status: "ACTIVE" },
-  { id: 4, name: "Win Htut", email: "win@example.com", orders: 27, spend: 9120, disputes: 1, plan: "pro", status: "ACTIVE" },
-  { id: 6, name: "May Thu", email: "may@example.com", orders: 4, spend: 1210, disputes: 0, plan: "free", status: "ACTIVE" },
-  { id: 8, name: "Kyaw Zin", email: "kyaw@example.com", orders: 9, spend: 640, disputes: 3, plan: "plus", status: "REVIEW" },
-  { id: 11, name: "Su Su", email: "susu@example.com", orders: 2, spend: 130, disputes: 4, plan: "free", status: "SUSPENDED" },
+  { id: 3, name: "Papa Aung", email: "papa@example.com", orders: 12, spend: 3680000, disputes: 0, plan: "plus", status: "ACTIVE" },
+  { id: 4, name: "Win Htut", email: "win@example.com", orders: 27, spend: 18240000, disputes: 1, plan: "pro", status: "ACTIVE" },
+  { id: 6, name: "May Thu", email: "may@example.com", orders: 4, spend: 2420000, disputes: 0, plan: "free", status: "ACTIVE" },
+  { id: 8, name: "Kyaw Zin", email: "kyaw@example.com", orders: 9, spend: 1280000, disputes: 3, plan: "plus", status: "REVIEW" },
+  { id: 11, name: "Su Su", email: "susu@example.com", orders: 2, spend: 260000, disputes: 4, plan: "free", status: "SUSPENDED" },
 ];
