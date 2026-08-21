@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ShieldCheck } from "lucide-react";
+import { Percent, ShieldCheck } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 import { useAuth } from "@/lib/auth";
 import type { Role } from "@/lib/api";
@@ -30,6 +30,7 @@ function AuthScreen() {
   const [mode, setMode] = useState<"login" | "register">("login");
   const [role, setRole] = useState<Role>("CUSTOMER");
   const [form, setForm] = useState({ name: "", email: "", phone: "", password: "" });
+  const [feeAgreed, setFeeAgreed] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -39,6 +40,10 @@ function AuthScreen() {
 
   async function submit(event: FormEvent) {
     event.preventDefault();
+    if (mode === "register" && role === "SELLER" && !feeAgreed) {
+      setError("Please accept the 5% platform fee to create a seller account.");
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
@@ -53,6 +58,7 @@ function AuthScreen() {
       setBusy(false);
     }
   }
+
 
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-5 py-10">
@@ -131,6 +137,32 @@ function AuthScreen() {
           value={form.password}
           onChange={(v) => setForm((f) => ({ ...f, password: v }))}
         />
+
+        {mode === "register" && role === "SELLER" && (
+          <div className="rounded-2xl border border-border bg-card p-4">
+            <p className="flex items-center gap-2 text-sm font-bold">
+              <Percent className="size-4 text-brand-teal" /> 5% platform fee
+            </p>
+            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+              MatchGuard deducts a 5% service fee from every completed transaction before your
+              escrow payout is released. Example: a $100 sale pays out $95.
+            </p>
+            <label className="mt-3 flex cursor-pointer items-start gap-2.5 text-xs leading-snug">
+              <input
+                type="checkbox"
+                checked={feeAgreed}
+                onChange={(e) => setFeeAgreed(e.target.checked)}
+                className="mt-0.5 size-4 shrink-0 accent-primary"
+              />
+              <span>
+                I understand and agree that MatchGuard charges 5% of every transaction I complete as
+                a seller.
+              </span>
+            </label>
+          </div>
+        )}
+
+
 
         {error && (
           <p className="rounded-xl bg-destructive/10 px-3 py-2.5 text-xs text-destructive">

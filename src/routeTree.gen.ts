@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AccountRouteImport } from './routes/account'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as PlansRouteImport } from './routes/plans'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as CheckoutIdRouteImport } from './routes/checkout.$id'
 import { Route as ListingIdRouteImport } from './routes/listing.$id'
@@ -34,9 +36,19 @@ const AccountRoute = AccountRouteImport.update({
   path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlansRoute = PlansRouteImport.update({
+  id: '/plans',
+  path: '/plans',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -98,7 +110,9 @@ const ApiPublicMgSplatRoute = ApiPublicMgSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/plans': typeof PlansRoute
   '/search': typeof SearchRoute
   '/checkout/$id': typeof CheckoutIdRoute
   '/listing/$id': typeof ListingIdRoute
@@ -114,7 +128,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/plans': typeof PlansRoute
   '/search': typeof SearchRoute
   '/checkout/$id': typeof CheckoutIdRoute
   '/listing/$id': typeof ListingIdRoute
@@ -131,7 +147,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/plans': typeof PlansRoute
   '/search': typeof SearchRoute
   '/checkout/$id': typeof CheckoutIdRoute
   '/listing/$id': typeof ListingIdRoute
@@ -149,7 +167,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/account'
+    | '/admin'
     | '/auth'
+    | '/plans'
     | '/search'
     | '/checkout/$id'
     | '/listing/$id'
@@ -165,7 +185,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/account'
+    | '/admin'
     | '/auth'
+    | '/plans'
     | '/search'
     | '/checkout/$id'
     | '/listing/$id'
@@ -181,7 +203,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/account'
+    | '/admin'
     | '/auth'
+    | '/plans'
     | '/search'
     | '/checkout/$id'
     | '/listing/$id'
@@ -198,7 +222,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
+  AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
+  PlansRoute: typeof PlansRoute
   SearchRoute: typeof SearchRoute
   CheckoutIdRoute: typeof CheckoutIdRoute
   ListingIdRoute: typeof ListingIdRoute
@@ -228,11 +254,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plans': {
+      id: '/plans'
+      path: '/plans'
+      fullPath: '/plans'
+      preLoaderRoute: typeof PlansRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -318,7 +358,9 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
+  AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
+  PlansRoute: PlansRoute,
   SearchRoute: SearchRoute,
   CheckoutIdRoute: CheckoutIdRoute,
   ListingIdRoute: ListingIdRoute,

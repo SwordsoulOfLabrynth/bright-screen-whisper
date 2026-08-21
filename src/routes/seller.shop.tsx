@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { LogOut, Mail, Store, Wallet } from "lucide-react";
+import { LogOut, Mail, Percent, Store, Wallet } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { api, formatMoney } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { sellerNet } from "@/lib/plans";
 
 export const Route = createFileRoute("/seller/shop")({
   head: () => ({
@@ -63,6 +64,14 @@ function SellerShop() {
         <p className="mt-1.5 text-sm text-primary-foreground/85">
           Paid out after buyers scanned the handover QR.
         </p>
+      </div>
+
+      <div className="mt-3 flex gap-2.5 rounded-2xl bg-accent p-4 text-xs leading-snug text-accent-foreground">
+        <Percent className="size-4 shrink-0" />
+        <span>
+          MatchGuard deducts a 5% platform fee from every completed transaction. Released this
+          period: {formatMoney(released)} gross · {formatMoney(sellerNet(released))} net after fees.
+        </span>
       </div>
 
       <button

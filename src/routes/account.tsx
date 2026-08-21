@@ -1,7 +1,9 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { LogOut, Mail, ShieldCheck, User } from "lucide-react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ChevronRight, LogOut, Mail, ShieldCheck, Sparkles, User } from "lucide-react";
+import { useEffect, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { useAuth } from "@/lib/auth";
+import { getPlan, PLANS, type PlanId } from "@/lib/plans";
 
 export const Route = createFileRoute("/account")({
   head: () => ({
@@ -22,6 +24,12 @@ export const Route = createFileRoute("/account")({
 function AccountScreen() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [plan, setPlanState] = useState<PlanId>("free");
+
+  useEffect(() => {
+    if (user) setPlanState(getPlan(user.id));
+  }, [user]);
+
 
   return (
     <AppShell requireRole="CUSTOMER">
@@ -41,12 +49,31 @@ function AccountScreen() {
         </div>
       </div>
 
+      <Link
+        to="/plans"
+        className="mt-3 flex items-center justify-between rounded-2xl border border-border bg-card p-4"
+      >
+        <span className="flex items-center gap-3">
+          <span className="grid size-10 place-items-center rounded-full bg-accent text-accent-foreground">
+            <Sparkles className="size-4" />
+          </span>
+          <span>
+            <strong className="block text-sm">Subscription plan</strong>
+            <span className="text-xs text-muted-foreground">
+              {PLANS.find((p) => p.id === plan)?.name} · manage AI search limits
+            </span>
+          </span>
+        </span>
+        <ChevronRight className="size-4 text-muted-foreground" />
+      </Link>
+
       <div className="mt-3 flex gap-2.5 rounded-2xl bg-accent p-4 text-xs leading-snug text-accent-foreground">
         <ShieldCheck className="size-4 shrink-0" />
         <span>
           Escrow protection is active on every order. Funds only move after you confirm handover.
         </span>
       </div>
+
 
       <button
         onClick={() => {
